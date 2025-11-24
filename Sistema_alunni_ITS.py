@@ -3,48 +3,73 @@ import time
 from datetime import datetime
 import os
 
-timestamp = datetime.now()
+contatore_matricola = 0
 
 def crea_matricola():
-    id_matricola = "000"
-    id_matricola = '%03d' % (int(id_matricola) + 1)
-    return id_matricola
+    global contatore_matricola
+    contatore_matricola += 1
+    return f"MAT{contatore_matricola:03d}"
 
-crea_matricola()
+def carica_alunni():
+    """Carica la lista degli alunni del file JSON, se esiste"""
+    if os.path.exists("lista_alunni.json"):
+        with open("lista_alunni.json", "r", encoding="utf-8") as file:
+            return json.load(file)
+    else:
+        return {}
 
-lista_alunni = {
-    f"MAT{crea_matricola()}":{
+def salva_alunni(lista):
+    """Salva i dati degli alunni nel file JSON"""
+    with open("lista_alunni.json", "w", encoding="utf-8") as file:
+        json.dump(lista, file, indent=4)
+
+def aggiungi_alunno():
+    """Crea un nuovo alunno e lo aggiunge al dizionario""" 
+    matricola = crea_matricola()
+    timestamp = datetime.now().isoformat() 
+
+    nome = input("Inserisci il nome del nuovo alunno:")
+    cognome = input("Inserisci il cognome del nuovo alunno:")
+    email = input("Inserisci la e-mail del nuovo alunno:")
+
+    nuovo_alunno= {
+        "nome": nome,
+        "cognome": cognome,
+        "email": email,
+        "matricola": matricola,
+        "data creazione": timestamp,
+        "data modifica": timestamp
+    }
+
+    return matricola, nuovo_alunno
+
+if not os.path.exists("lista_alunni.json"):
+    matricola_iniziale = crea_matricola()
+    timestamp_iniziale = datetime.now().isoformat()
+    lista_iniziale = {
+        matricola_iniziale: {
         "nome": "Matteo",
         "cognome": "Braida",
-        "email": "matteo.braida@its.com",
-        "matricola": f"MAT{crea_matricola()}",
-        "data_creazione":f"{timestamp}",
-        "data_modifica":f"{timestamp}"
-    },
-}
+        "email": "braida.matteo@its.com",
+        "matricola": matricola_iniziale,
+        "data creazione": timestamp_iniziale,
+        "data modifica": timestamp_iniziale
+        }
+    }
 
-def crea_json():
-    with open("lista_alunni.json", "w") as file:
-        json.dump(lista_alunni, file, indent=4)
+    salva_alunni(lista_iniziale)
+    print(f"File 'lista_alunni.json' creato con alunno iniziale {matricola_iniziale}")
+else:
+    alunni_esistenti = carica_alunni()
+    matricole = [int(key.replace("MAT","")) for key in alunni_esistenti.keys() if key.startswith("MAT")]
+    if matricole:
+        contatore_matricola = max(matricole)
 
-crea_json()
-
-def aggiunta_alunno():
-    nuovo_alunno = {}
-    nome_alunno = input("Insersci nome alunno:")
-    nuovo_alunno.update({"nome": nome_alunno})
-    cognome_alunno = input("Inserisci cognome:")
-    nuovo_alunno.update({"cognome": cognome_alunno})
-    email_alunno = input("Inserisci e-mail:")
-    nuovo_alunno.update({"email": email_alunno})
-    nuovo_alunno.update({"data_creazione":f"{timestamp}"})
-    nuovo_alunno.update({"data_modifica":f"{timestamp}"})
-    
-
-print(lista_alunni)
 
 while True:
 
+    carica_alunni()
+    
     print("\nSISTEMA TRACCIAMENTO ALUNNI")
     print("===========================")
     print("\nSeleziona un'opzione:")
@@ -66,4 +91,8 @@ while True:
     scelta_menu = input("\nSeleziona l'opzione:").lower()
 
     if scelta_menu == 'a':
-        aggiunta_alunno()
+        matricola, dati = aggiungi_alunno()
+        alunni = carica_alunni()
+        alunni[matricola] = dati
+        salva_alunni(alunni)
+        print(f"\nAlunno aggiunto con successo!")

@@ -2,9 +2,17 @@
     "MAT001": {
         "nome": "Matteo",
         "cognome": "Braida",
-        "email": "matteo.braida@its.com",
+        "email": "braida.matteo@its.com",
         "matricola": "MAT001",
-        "data_creazione": "2025-11-24 17:56:00.269357",
-        "data_modifica": "2025-11-24 17:56:00.269357"
+        "data creazione": "2025-11-24T23:29:08.580500",
+        "data modifica": "2025-11-24T23:29:08.580500"
+    },
+    "MAT002": {
+        "nome": "Mario",
+        "cognome": "Rossi",
+        "email": "rossi.mario@its.com",
+        "matricola": "MAT002",
+        "data creazione": "2025-11-24T23:35:42.421440",
+        "data modifica": "2025-11-24T23:35:42.421440"
     }
 }
