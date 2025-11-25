@@ -14,5 +14,13 @@
         "matricola": "MAT002",
         "data creazione": "2025-11-25T11:48:34.723721",
         "data modifica": "2025-11-25T11:48:34.723721"
+    },
+    "MAT003": {
+        "nome": "Paolo",
+        "cognome": "Bianchi",
+        "email": "bianchi.paolo@its.com",
+        "matricola": "MAT003",
+        "data creazione": "2025-11-25T15:22:40.471414",
+        "data modifica": "2025-11-25T15:22:40.471414"
     }
 }
