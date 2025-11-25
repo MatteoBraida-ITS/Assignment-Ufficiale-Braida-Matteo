@@ -33,6 +33,16 @@ def salva_alunni(lista):
     with open("lista_alunni.json", "w", encoding="utf-8") as file:
         json.dump(lista, file, indent=4)
 
+def visualizza_alunni():
+    """Stampa una lista con tutti i dati degli studenti presenti nel file JSON"""
+    alunni = carica_alunni()
+
+    if alunni:
+                for mat, dati in alunni.items():
+                    print(f"{mat}:\n -Nome:{dati['nome']}\n -Cognome:{dati['cognome']}\n -E-mail:{dati['email']}")
+    else:
+                print("Nessun alunno presente.")
+
 def aggiungi_alunno():
     """Acquisisce i dati di un nuovo alunno""" 
     matricola = crea_matricola()
@@ -54,23 +64,48 @@ def aggiungi_alunno():
     return matricola, nuovo_alunno
 
 def modifica_dati_alunno():
+    """Modica i dati degli studenti contenuti nel file JSON"""
     alunni = carica_alunni()
-    dati = json.dumps(alunni)
-    lista_alunni = {dati}
+
+    if not alunni:
+        print("Nessun alunno presente nel database")
+        return
+    
     matricola = input("Seleziona l'alunno di qui vuoi modificare i dati digitando la sua 'matricola' (es.MAT001):")
+
+    if matricola not in alunni:
+        print("L'alunno selezionato non è presente nel database")
+        return
     
-    if matricola in lista_alunni:
-        scelta_modifica = input(f"cosa vuoi modificare dell'alunno {matricola}?:")
-    
-    for key in lista_alunni:
-        if  scelta_modifica in lista_alunni:
-            nome = input(f"Digita il nuovo nome per l'alunno {matricola}:")
-            lista_alunni.update({key: nome})
+    alunno = alunni[matricola]
+    print(f"\nDati attuali di {alunno['nome']} {alunno['cognome']}")
+    print(f"1) Nome: {alunno['nome']}")
+    print(f"2) Cognome: {alunno['cognome']}")
+    print(f"3) E-mail: {alunno['email']}")
+
+    campo = input(f"Quale dato dell'alunno {alunno['nome']} {alunno['cognome']} vuoi modificare? (1-3):")
+
+    nuovo_dato = None
+
+    if campo == '1':
+        nuovo_dato = input("Inserisci il nuovo nome:")
+        alunno['nome'] = nuovo_dato
+        print(f"Nome cambiato con {alunno['nome']}!")
+        print(alunno)
+    elif campo == '2':
+        nuovo_dato = input("Inserisci il nuovo cognome:")
+        alunno['cognome'] = nuovo_dato
+        print(f"Cognome cambiato con {alunno['cognome']}")
+    elif campo == '3':
+        nuovo_dato = input("Inserisci la nuova E-mail:")
+        alunno['email'] = nuovo_dato
+        print(f"E-mail cambiata con {alunno['email']}")
     else:
-        print("La scelta non è presente nella lista")
+        print("Dato non presente nel registro.")
 
-    print(lista_alunni)
-
+    alunno['data modifica'] = datetime.now().isoformat()
+    alunni[matricola] = alunno
+    salva_alunni(alunni)
 
 if not os.path.exists("lista_alunni.json"):
     matricola_iniziale = crea_matricola()
@@ -128,9 +163,7 @@ while True:
     if scelta_menu == 'b':
         print("\n")
         box_testo("VISUALIZZA ALUNNI REGISTRATI")
-        lista_alunni = carica_alunni()
-        lista_alunni_formattata = json.dumps(lista_alunni, indent=4)
-        print(lista_alunni_formattata)
+        visualizza_alunni()
 
     if scelta_menu == 'c':
         print("\n")
