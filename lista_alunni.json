@@ -4,23 +4,7 @@
         "cognome": "Braida",
         "email": "braida.matteo@its.com",
         "matricola": "MAT001",
-        "data creazione": "2025-11-25T11:48:30.364981",
-        "data modifica": "2025-11-25T11:48:30.364981"
-    },
-    "MAT002": {
-        "nome": "Mario",
-        "cognome": "Rossi",
-        "email": "rossi.mario@its.com",
-        "matricola": "MAT002",
-        "data creazione": "2025-11-25T11:48:34.723721",
-        "data modifica": "2025-11-25T11:48:34.723721"
-    },
-    "MAT003": {
-        "nome": "Paolo",
-        "cognome": "Bianchi",
-        "email": "bianchi.paolo@its.com",
-        "matricola": "MAT003",
-        "data creazione": "2025-11-25T15:22:40.471414",
-        "data modifica": "2025-11-25T15:22:40.471414"
+        "data creazione": "2025-11-25T17:33:02.861805",
+        "data modifica": "2025-11-25T17:33:02.861805"
     }
 }

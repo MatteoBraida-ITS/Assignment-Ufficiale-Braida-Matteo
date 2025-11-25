@@ -53,6 +53,25 @@ def aggiungi_alunno():
 
     return matricola, nuovo_alunno
 
+def modifica_dati_alunno():
+    alunni = carica_alunni()
+    dati = json.dumps(alunni)
+    lista_alunni = {dati}
+    matricola = input("Seleziona l'alunno di qui vuoi modificare i dati digitando la sua 'matricola' (es.MAT001):")
+    
+    if matricola in lista_alunni:
+        scelta_modifica = input(f"cosa vuoi modificare dell'alunno {matricola}?:")
+    
+    for key in lista_alunni:
+        if  scelta_modifica in lista_alunni:
+            nome = input(f"Digita il nuovo nome per l'alunno {matricola}:")
+            lista_alunni.update({key: nome})
+    else:
+        print("La scelta non è presente nella lista")
+
+    print(lista_alunni)
+
+
 if not os.path.exists("lista_alunni.json"):
     matricola_iniziale = crea_matricola()
     timestamp_iniziale = datetime.now().isoformat()
@@ -109,7 +128,11 @@ while True:
     if scelta_menu == 'b':
         print("\n")
         box_testo("VISUALIZZA ALUNNI REGISTRATI")
-        with open("lista_alunni.json", "r") as file:
-            lista_alunni = json.load(file)
-            lista_alunni_formattata = json.dumps(lista_alunni, indent=4)
-            print(lista_alunni_formattata)
+        lista_alunni = carica_alunni()
+        lista_alunni_formattata = json.dumps(lista_alunni, indent=4)
+        print(lista_alunni_formattata)
+
+    if scelta_menu == 'c':
+        print("\n")
+        box_testo("MODIFICA DATI ALUNNO")
+        modifica_dati_alunno()
