@@ -5,6 +5,16 @@ import os
 
 contatore_matricola = 0
 
+def box_testo(titolo: str):
+    larghezza = len(titolo) + 4 
+    parte_sopra = "╔" + "═" * (larghezza - 2) + "╗"
+    parte_di_mezzo = "║ " + titolo.ljust(larghezza - 4) + " ║"
+    parte_inferiore = "╚" + "═" * (larghezza - 2) + "╝"
+
+    print(parte_sopra)
+    print(parte_di_mezzo)
+    print(parte_inferiore)
+
 def crea_matricola():
     global contatore_matricola
     contatore_matricola += 1
@@ -24,7 +34,7 @@ def salva_alunni(lista):
         json.dump(lista, file, indent=4)
 
 def aggiungi_alunno():
-    """Crea un nuovo alunno e lo aggiunge al dizionario""" 
+    """Acquisisce i dati di un nuovo alunno""" 
     matricola = crea_matricola()
     timestamp = datetime.now().isoformat() 
 
@@ -42,6 +52,8 @@ def aggiungi_alunno():
     }
 
     return matricola, nuovo_alunno
+
+
 
 if not os.path.exists("lista_alunni.json"):
     matricola_iniziale = crea_matricola()
@@ -70,8 +82,7 @@ while True:
 
     carica_alunni()
     
-    print("\nSISTEMA TRACCIAMENTO ALUNNI")
-    print("===========================")
+    box_testo("SISTEMA TRACCIAMENTO ALUNNI")
     print("\nSeleziona un'opzione:")
     print("     A)Inserisci nuovo alunno")
     print("     B)Visualizza alunni registrati")
@@ -91,8 +102,16 @@ while True:
     scelta_menu = input("\nSeleziona l'opzione:").lower()
 
     if scelta_menu == 'a':
+        box_testo("INSERISCI NUOVO ALUNNO")
         matricola, dati = aggiungi_alunno()
         alunni = carica_alunni()
         alunni[matricola] = dati
         salva_alunni(alunni)
         print(f"\nAlunno aggiunto con successo!")
+
+    if scelta_menu == 'b':
+        box_testo("VISUALIZZA ALUNNI REGISTRATI")
+        with open("lista_alunni.json", "r") as file:
+            lista_alunni = json.load(file)
+            lista_alunni_formattata = json.dumps(lista_alunni, indent=4)
+            print(lista_alunni_formattata)
