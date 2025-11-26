@@ -68,13 +68,13 @@ def modifica_dati_alunno():
     alunni = carica_alunni()
 
     if not alunni:
-        print("Nessun alunno presente nel database")
+        print("\nNessun alunno presente nel database")
         return
     
-    matricola = input("Seleziona l'alunno di qui vuoi modificare i dati digitando la sua 'matricola' (es.MAT001):")
+    matricola = input("\nSeleziona l'alunno di qui vuoi modificare i dati digitando la sua matricola (es.MAT001):")
 
     if matricola not in alunni:
-        print("L'alunno selezionato non è presente nel database")
+        print("\nSeleziona l'alunno di qui vuoi eliminare i dati digitando la sua matricola (es.MAT001):")
         return
     
     alunno = alunni[matricola]
@@ -83,7 +83,7 @@ def modifica_dati_alunno():
     print(f"2) Cognome: {alunno['cognome']}")
     print(f"3) E-mail: {alunno['email']}")
 
-    campo = input(f"Quale dato dell'alunno {alunno['nome']} {alunno['cognome']} vuoi modificare? (1-3):")
+    campo = input(f"\nQuale dato dell'alunno {alunno['nome']} {alunno['cognome']} vuoi modificare? (1-3):")
 
     nuovo_dato = None
 
@@ -101,9 +101,40 @@ def modifica_dati_alunno():
         alunno['email'] = nuovo_dato
         print(f"E-mail cambiata con {alunno['email']}")
     else:
-        print("Dato non presente nel registro.")
+        print("\n Errore: Dato non presente nel registro.")
 
     alunno['data modifica'] = datetime.now().isoformat()
+    alunni[matricola] = alunno
+    salva_alunni(alunni)
+
+def elimina_alunno():
+    """Elimina i dati relativi all'alunno selezionato"""
+    alunni = carica_alunni()
+
+    if not alunni:
+          print("\nNessun alunno presente nel database")
+          return
+     
+    matricola = input("\nSeleziona l'alunno di qui vuoi eliminare i dati digitando la sua matricola (es.MAT001):")
+
+    if matricola not in alunni:
+          print("\nLa matricola digitata non corrisponde a nessun alunno presente nel database.")
+          return
+
+    alunno = alunni[matricola]
+    print(f"\nL'alunno selezionato è {alunno['nome']} {alunno['cognome']}.")
+
+    conferma = input(f"\nSei sicuro di voler eliminare i dati di {alunno['nome']} {alunno['cognome']}? (y/n):").lower()
+
+    if conferma == 'y':
+        alunno.pop(matricola)
+        print(f"\nL'alunno {alunno['nome']} {alunno['cognome']} con matricola {matricola} è stato rimosso dal database.")
+    elif conferma == 'n':
+        print("\nOperazione annullata.")
+        return
+    else:
+        print("\nComando non valido.")
+
     alunni[matricola] = alunno
     salva_alunni(alunni)
 
@@ -133,6 +164,7 @@ while True:
 
     carica_alunni()
     
+    print("\n")
     box_testo("SISTEMA TRACCIAMENTO ALUNNI")
     print("     A)Inserisci nuovo alunno")
     print("     B)Visualizza alunni registrati")
@@ -169,3 +201,8 @@ while True:
         print("\n")
         box_testo("MODIFICA DATI ALUNNO")
         modifica_dati_alunno()
+
+    if scelta_menu == 'd':
+        print("\n")
+        box_testo("ELIMINA DATI ALUNNO")
+        elimina_alunno()
