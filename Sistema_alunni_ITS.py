@@ -4,6 +4,7 @@ from datetime import datetime
 import os
 
 contatore_matricola = 0
+contatore_task = 0
 
 def box_testo(titolo: str):
     larghezza = len(titolo) + 4 
@@ -20,6 +21,11 @@ def crea_matricola():
     contatore_matricola += 1
     return f"MAT{contatore_matricola:03d}"
 
+def crea_task():
+     global contatore_task
+     contatore_task += 1
+     return f"TASK{contatore_task:03d}"
+
 def carica_alunni():
     """Carica la lista degli alunni del file JSON, se esiste"""
     if os.path.exists("lista_alunni.json"):
@@ -28,10 +34,10 @@ def carica_alunni():
     else:
         return {}
 
-def salva_alunni(lista):
+def salva_alunni(lista1, lista2):
     """Salva i dati degli alunni nel file JSON"""
     with open("lista_alunni.json", "w", encoding="utf-8") as file:
-        json.dump(lista, file, indent=4)
+        json.dump(lista1, lista2, file, indent=4)
 
 def visualizza_alunni():
     """Stampa una lista con tutti i dati degli studenti presenti nel file JSON"""
@@ -127,7 +133,7 @@ def elimina_alunno():
     conferma = input(f"\nSei sicuro di voler eliminare i dati di {alunno['nome']} {alunno['cognome']}? (y/n):").lower()
 
     if conferma == 'y':
-        alunno.pop(matricola)
+        alunni.pop(matricola)
         print(f"\nL'alunno {alunno['nome']} {alunno['cognome']} con matricola {matricola} è stato rimosso dal database.")
     elif conferma == 'n':
         print("\nOperazione annullata.")
@@ -135,13 +141,12 @@ def elimina_alunno():
     else:
         print("\nComando non valido.")
 
-    alunni[matricola] = alunno
     salva_alunni(alunni)
 
 if not os.path.exists("lista_alunni.json"):
     matricola_iniziale = crea_matricola()
     timestamp_iniziale = datetime.now().isoformat()
-    lista_iniziale = {
+    lista_alunni_iniziale = {
         matricola_iniziale: {
         "nome": "Matteo",
         "cognome": "Braida",
@@ -152,7 +157,20 @@ if not os.path.exists("lista_alunni.json"):
         }
     }
 
-    salva_alunni(lista_iniziale)
+    task_iniziale = crea_task()
+    lista_task_iniziale = {
+         task_iniziale: {
+              "id": task_iniziale,
+              "descrizione": "esercizio python",
+              "alunno_matricola": matricola_iniziale,
+              "stato": "assegnato",
+              "data assegnazione": datetime.now().isoformat(),
+              "voto": 8
+         }
+    }
+
+
+    salva_alunni(lista_alunni_iniziale, lista_task_iniziale)
     print(f"File 'lista_alunni.json' creato con alunno iniziale {matricola_iniziale}")
 else:
     alunni_esistenti = carica_alunni()
@@ -206,3 +224,4 @@ while True:
         print("\n")
         box_testo("ELIMINA DATI ALUNNO")
         elimina_alunno()
+
