@@ -33,6 +33,11 @@ def carica_database():
             return json.load(file)
     else:
         return {}
+    
+def crea_alunni(lista):
+     """Crea la  la lista_alunni.json"""
+     with open("lista_alunni.json", "w", encoding="utf-8") as file:
+        json.dump(lista, file, indent=4)
 
 def salva_alunni(lista):
     """Salva i dati degli alunni nel file JSON"""
@@ -60,31 +65,30 @@ def aggiungi_alunno():
     cognome = input("Inserisci il cognome del nuovo alunno:")
     email = input("Inserisci la e-mail del nuovo alunno:")
 
-    nuovo_alunno= {
-        "alunno": {
-        matricola: {
-            "nome": nome,
-            "cognome": cognome,
-            "email": email,
-            "matricola": matricola,
-            "data creazione": timestamp,
-            "data modifica": timestamp
-        }
-    },
-
-    "compiti": {
-        task: {
-            "id": task,
-            "descrizione": "",
-            "alunno_matricola": matricola,
-            "stato": "",
-            "data assegnazione": datetime.now().isoformat(),
-            "voto": 0
-        }
+    nuovo_alunno = {
+        "alunni": {
+         matricola: {
+             "nome": nome,
+             "cognome": cognome,
+             "email": email,
+             "matricola": matricola,
+             "data creazione": timestamp,
+             "data modifica": timestamp
+         },
+         
+         task: {
+             "id": task,
+             "descrizione": "",
+             "alunno_matricola": matricola,
+             "stato": "",
+             "data assegnazione": datetime.now().isoformat(),
+             "voto": 0
+         }
+        },
     }
-    }
+    
 
-    return matricola, nuovo_alunno
+    return matricola, task, nuovo_alunno
 
 def modifica_dati_alunno():
     """Modica i dati degli studenti contenuti nel file JSON"""
@@ -166,7 +170,7 @@ if not os.path.exists("lista_alunni.json"):
     timestamp_iniziale = datetime.now().isoformat()
 
     database = {
-    "alunno": {
+    "alunni": {
         matricola_iniziale: {
             "nome": "Matteo",
             "cognome": "Braida",
@@ -174,10 +178,8 @@ if not os.path.exists("lista_alunni.json"):
             "matricola": matricola_iniziale,
             "data creazione": timestamp_iniziale,
             "data modifica": timestamp_iniziale
-        }
-    },
+        },
 
-    "compiti": {
         task_iniziale: {
             "id": task_iniziale,
             "descrizione": "esercizio python",
@@ -186,10 +188,10 @@ if not os.path.exists("lista_alunni.json"):
             "data assegnazione": datetime.now().isoformat(),
             "voto": 8
         }
-    }
+    },
 }
     
-    salva_alunni(database)
+    crea_alunni(database)
     print(f"File 'lista_alunni.json' creato con alunno iniziale {matricola_iniziale}")
 else:
     alunni_esistenti = carica_database()
@@ -223,10 +225,10 @@ while True:
     if scelta_menu == 'a':
         print("\n")
         box_testo("INSERISCI NUOVO ALUNNO")
-        matricola, nuovi_dati_alunno = aggiungi_alunno()
+        matricola, task, nuovo_alunno = aggiungi_alunno()
         dati = carica_database()
-        dati
-        alunni = dati[nuovi_dati_alunno["alunno"]["compiti"]]
+        dati["alunni"].update(nuovo_alunno{"alunni"})
+        alunni = dati["alunni"]
         salva_alunni(alunni)
         print(f"\nAlunno aggiunto con successo!")
 

@@ -1,21 +1,19 @@
 {
-    "studenti": {
+    "alunni": {
         "MAT001": {
             "nome": "Matteo",
             "cognome": "Braida",
             "email": "braida.matteo@its.com",
             "matricola": "MAT001",
-            "data creazione": "2025-11-27T11:37:54.995956",
-            "data modifica": "2025-11-27T11:37:54.995956"
-        }
-    },
-    "compiti": {
+            "data creazione": "2025-11-27T16:16:30.719578",
+            "data modifica": "2025-11-27T16:16:30.719578"
+        },
         "TASK001": {
             "id": "TASK001",
             "descrizione": "esercizio python",
             "alunno_matricola": "MAT001",
             "stato": "assegnato",
-            "data assegnazione": "2025-11-27T11:37:54.995967",
+            "data assegnazione": "2025-11-27T16:16:30.719789",
             "voto": 8
         }
     }

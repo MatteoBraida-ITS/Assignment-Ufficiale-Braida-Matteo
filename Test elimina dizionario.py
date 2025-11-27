@@ -1,27 +1,47 @@
-alunni = {
+database = {
+    "alunni": {
+        "MAT001": {
+            "nome": "Matteo",
+            "cognome": "Braida",
+            "email": "braida.matteo@its.com",
+            "matricola": "MAT001",
+            "data creazione": "",
+            "data modifica": ""
+        },
 
-    "MAT001": {
-        "nome": "Giovanni",
-        "cognome": "Braida",
-        "email": "braida.matteo@its.com",
-        "matricola": "MAT001",
-        "data creazione": "2025-11-25T23:53:42.247361",
-        "data modifica": "2025-11-25T23:58:09.314127"
+        "TASK001": {
+            "id": "TASK001",
+            "descrizione": "esercizio python",
+            "alunno_matricola": "MAT001",
+            "stato": "assegnato",
+            "data assegnazione": "",
+            "voto": 8
+        }
     },
-    "MAT002": {
-        "nome": "Mario",
-        "cognome": "Blu",
-        "email": "rossi.mario@its.com",
-        "matricola": "MAT002",
-        "data creazione": "2025-11-26T00:02:56.890192",
-        "data modifica": "2025-11-26T14:24:20.560189"
-    }
-
 }
 
-key_to_remove = "MAT002"
+database_nuovo = {
+    "alunni": {
+        "MAT002": {
+            "nome": "Matteo",
+            "cognome": "Braida",
+            "email": "braida.matteo@its.com",
+            "matricola": "MAT002",
+            "data creazione": "",
+            "data modifica": ""
+        },
 
-if key_to_remove in alunni:
-    removed_value = alunni.pop(key_to_remove)
-    
-print(alunni)
+        "TASK002": {
+            "id": "TASK002",
+            "descrizione": "esercizio python",
+            "alunno_matricola": "MAT002",
+            "stato": "assegnato",
+            "data assegnazione": "",
+            "voto": 8
+        }
+    },
+}
+
+database["alunni"].update(database_nuovo["alunni"])
+
+print(database)
