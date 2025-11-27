@@ -26,7 +26,7 @@ def crea_task():
      contatore_task += 1
      return f"TASK{contatore_task:03d}"
 
-def carica_alunni():
+def carica_database():
     """Carica la lista degli alunni del file JSON, se esiste"""
     if os.path.exists("lista_alunni.json"):
         with open("lista_alunni.json", "r", encoding="utf-8") as file:
@@ -34,14 +34,15 @@ def carica_alunni():
     else:
         return {}
 
-def salva_alunni(lista1, lista2):
+def salva_alunni(lista):
     """Salva i dati degli alunni nel file JSON"""
     with open("lista_alunni.json", "w", encoding="utf-8") as file:
-        json.dump(lista1, lista2, file, indent=4)
+        json.dump(lista, file, indent=4)
 
 def visualizza_alunni():
     """Stampa una lista con tutti i dati degli studenti presenti nel file JSON"""
-    alunni = carica_alunni()
+    dati = carica_database()
+    alunni = dati["alunni"]
 
     if alunni:
                 for mat, dati in alunni.items():
@@ -52,6 +53,7 @@ def visualizza_alunni():
 def aggiungi_alunno():
     """Acquisisce i dati di un nuovo alunno""" 
     matricola = crea_matricola()
+    task = crea_task()
     timestamp = datetime.now().isoformat() 
 
     nome = input("Inserisci il nome del nuovo alunno:")
@@ -59,19 +61,34 @@ def aggiungi_alunno():
     email = input("Inserisci la e-mail del nuovo alunno:")
 
     nuovo_alunno= {
-        "nome": nome,
-        "cognome": cognome,
-        "email": email,
-        "matricola": matricola,
-        "data creazione": timestamp,
-        "data modifica": timestamp
+        "alunno": {
+        matricola: {
+            "nome": nome,
+            "cognome": cognome,
+            "email": email,
+            "matricola": matricola,
+            "data creazione": timestamp,
+            "data modifica": timestamp
+        }
+    },
+
+    "compiti": {
+        task: {
+            "id": task,
+            "descrizione": "",
+            "alunno_matricola": matricola,
+            "stato": "",
+            "data assegnazione": datetime.now().isoformat(),
+            "voto": 0
+        }
+    }
     }
 
     return matricola, nuovo_alunno
 
 def modifica_dati_alunno():
     """Modica i dati degli studenti contenuti nel file JSON"""
-    alunni = carica_alunni()
+    alunni = carica_database()
 
     if not alunni:
         print("\nNessun alunno presente nel database")
@@ -79,7 +96,7 @@ def modifica_dati_alunno():
     
     matricola = input("\nSeleziona l'alunno di qui vuoi modificare i dati digitando la sua matricola (es.MAT001):")
 
-    if matricola not in alunni:
+    if matricola not in alunni["alunno"]:
         print("\nSeleziona l'alunno di qui vuoi eliminare i dati digitando la sua matricola (es.MAT001):")
         return
     
@@ -115,7 +132,7 @@ def modifica_dati_alunno():
 
 def elimina_alunno():
     """Elimina i dati relativi all'alunno selezionato"""
-    alunni = carica_alunni()
+    alunni = carica_database()
 
     if not alunni:
           print("\nNessun alunno presente nel database")
@@ -145,42 +162,44 @@ def elimina_alunno():
 
 if not os.path.exists("lista_alunni.json"):
     matricola_iniziale = crea_matricola()
+    task_iniziale = crea_task()
     timestamp_iniziale = datetime.now().isoformat()
-    lista_alunni_iniziale = {
+
+    database = {
+    "alunno": {
         matricola_iniziale: {
-        "nome": "Matteo",
-        "cognome": "Braida",
-        "email": "braida.matteo@its.com",
-        "matricola": matricola_iniziale,
-        "data creazione": timestamp_iniziale,
-        "data modifica": timestamp_iniziale
+            "nome": "Matteo",
+            "cognome": "Braida",
+            "email": "braida.matteo@its.com",
+            "matricola": matricola_iniziale,
+            "data creazione": timestamp_iniziale,
+            "data modifica": timestamp_iniziale
+        }
+    },
+
+    "compiti": {
+        task_iniziale: {
+            "id": task_iniziale,
+            "descrizione": "esercizio python",
+            "alunno_matricola": matricola_iniziale,
+            "stato": "assegnato",
+            "data assegnazione": datetime.now().isoformat(),
+            "voto": 8
         }
     }
-
-    task_iniziale = crea_task()
-    lista_task_iniziale = {
-         task_iniziale: {
-              "id": task_iniziale,
-              "descrizione": "esercizio python",
-              "alunno_matricola": matricola_iniziale,
-              "stato": "assegnato",
-              "data assegnazione": datetime.now().isoformat(),
-              "voto": 8
-         }
-    }
-
-
-    salva_alunni(lista_alunni_iniziale, lista_task_iniziale)
+}
+    
+    salva_alunni(database)
     print(f"File 'lista_alunni.json' creato con alunno iniziale {matricola_iniziale}")
 else:
-    alunni_esistenti = carica_alunni()
+    alunni_esistenti = carica_database()
     matricole = [int(key.replace("MAT","")) for key in alunni_esistenti.keys() if key.startswith("MAT")]
     if matricole:
         contatore_matricola = max(matricole)
 
 while True:
 
-    carica_alunni()
+    carica_database()
     
     print("\n")
     box_testo("SISTEMA TRACCIAMENTO ALUNNI")
@@ -204,9 +223,10 @@ while True:
     if scelta_menu == 'a':
         print("\n")
         box_testo("INSERISCI NUOVO ALUNNO")
-        matricola, dati = aggiungi_alunno()
-        alunni = carica_alunni()
-        alunni[matricola] = dati
+        matricola, nuovi_dati_alunno = aggiungi_alunno()
+        dati = carica_database()
+        dati
+        alunni = dati[nuovi_dati_alunno["alunno"]["compiti"]]
         salva_alunni(alunni)
         print(f"\nAlunno aggiunto con successo!")
 
