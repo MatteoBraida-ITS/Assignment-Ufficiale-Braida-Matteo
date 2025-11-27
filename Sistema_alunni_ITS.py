@@ -50,8 +50,8 @@ def visualizza_alunni():
     alunni = dati["alunni"]
 
     if alunni:
-                for mat, dati in alunni.items():
-                    print(f"{mat}:\n -Nome:{dati['nome']}\n -Cognome:{dati['cognome']}\n -E-mail:{dati['email']}")
+                for alunno in alunni:
+                    print(f"{matricola}:\n -Nome:{alunno['nome']}\n -Cognome:{alunno['cognome']}\n -E-mail:{alunno['email']}")
     else:
                 print("Nessun alunno presente.")
 
@@ -67,27 +67,26 @@ def aggiungi_alunno():
 
     nuovo_alunno = {
         "alunni": {
-         matricola: {
-             "nome": nome,
-             "cognome": cognome,
-             "email": email,
-             "matricola": matricola,
-             "data creazione": timestamp,
-             "data modifica": timestamp
-         },
+        matricola: {
+           "nome": nome,
+           "cognome": cognome,
+           "email": email,
+           "matricola": matricola,
+           "data creazione": timestamp,
+           "data modifica": timestamp
+        },
          
-         task: {
-             "id": task,
-             "descrizione": "",
-             "alunno_matricola": matricola,
-             "stato": "",
-             "data assegnazione": datetime.now().isoformat(),
-             "voto": 0
-         }
+        task: {
+           "id": task,
+           "descrizione": "",
+           "alunno_matricola": matricola,
+           "stato": "",
+           "data assegnazione": datetime.now().isoformat(),
+           "voto": 0
+        }
         },
     }
     
-
     return matricola, task, nuovo_alunno
 
 def modifica_dati_alunno():
@@ -227,8 +226,8 @@ while True:
         box_testo("INSERISCI NUOVO ALUNNO")
         matricola, task, nuovo_alunno = aggiungi_alunno()
         dati = carica_database()
-        dati["alunni"].update(nuovo_alunno{"alunni"})
-        alunni = dati["alunni"]
+        dati["alunni"].update(nuovo_alunno["alunni"])
+        alunni = dati
         salva_alunni(alunni)
         print(f"\nAlunno aggiunto con successo!")
 

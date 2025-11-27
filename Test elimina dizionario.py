@@ -44,4 +44,5 @@ database_nuovo = {
 
 database["alunni"].update(database_nuovo["alunni"])
 
-print(database)
+for key in database["alunni"]:
+    
