@@ -50,10 +50,13 @@ def visualizza_alunni():
     alunni = dati["alunni"]
 
     if alunni:
-                for alunno in alunni:
-                    print(f"{matricola}:\n -Nome:{alunno['nome']}\n -Cognome:{alunno['cognome']}\n -E-mail:{alunno['email']}")
+        for matricola, alunno in alunni.items():
+            if matricola.startswith("MAT"):
+                print(f"{matricola}:\n -Nome:{alunno["nome"]}\n -Cognome:{alunno["cognome"]}\n -E-mail:{alunno["email"]}")
+            else: 
+                continue
     else:
-                print("Nessun alunno presente.")
+        print("Nessun alunno presente.")
 
 def aggiungi_alunno():
     """Acquisisce i dati di un nuovo alunno""" 
@@ -74,8 +77,9 @@ def aggiungi_alunno():
            "matricola": matricola,
            "data creazione": timestamp,
            "data modifica": timestamp
-        },
-         
+        }
+    },
+        "compiti": {
         task: {
            "id": task,
            "descrizione": "",
@@ -84,62 +88,65 @@ def aggiungi_alunno():
            "data assegnazione": datetime.now().isoformat(),
            "voto": 0
         }
-        },
-    }
+    },
+}
     
     return matricola, task, nuovo_alunno
 
 def modifica_dati_alunno():
     """Modica i dati degli studenti contenuti nel file JSON"""
-    alunni = carica_database()
-
-    if not alunni:
+    dati = carica_database()
+    
+    if not dati:
         print("\nNessun alunno presente nel database")
         return
     
+    alunni = dati["alunni"]
+
     matricola = input("\nSeleziona l'alunno di qui vuoi modificare i dati digitando la sua matricola (es.MAT001):")
 
-    if matricola not in alunni["alunno"]:
-        print("\nSeleziona l'alunno di qui vuoi eliminare i dati digitando la sua matricola (es.MAT001):")
-        return
-    
-    alunno = alunni[matricola]
-    print(f"\nDati attuali di {alunno['nome']} {alunno['cognome']}")
-    print(f"1) Nome: {alunno['nome']}")
-    print(f"2) Cognome: {alunno['cognome']}")
-    print(f"3) E-mail: {alunno['email']}")
+    if matricola in alunni:    
+        alunno = alunni[matricola]
+        print(f"\nDati attuali di {alunno['nome']} {alunno['cognome']}")
+        print(f"1) Nome: {alunno['nome']}")
+        print(f"2) Cognome: {alunno['cognome']}")
+        print(f"3) E-mail: {alunno['email']}")
 
-    campo = input(f"\nQuale dato dell'alunno {alunno['nome']} {alunno['cognome']} vuoi modificare? (1-3):")
+        campo = input(f"\nQuale dato dell'alunno {alunno['nome']} {alunno['cognome']} vuoi modificare? (1-3):")
 
-    nuovo_dato = None
+        nuovo_dato = None
 
-    if campo == '1':
-        nuovo_dato = input("Inserisci il nuovo nome:")
-        alunno['nome'] = nuovo_dato
-        print(f"Nome cambiato con {alunno['nome']}!")
-        print(alunno)
-    elif campo == '2':
-        nuovo_dato = input("Inserisci il nuovo cognome:")
-        alunno['cognome'] = nuovo_dato
-        print(f"Cognome cambiato con {alunno['cognome']}")
-    elif campo == '3':
-        nuovo_dato = input("Inserisci la nuova E-mail:")
-        alunno['email'] = nuovo_dato
-        print(f"E-mail cambiata con {alunno['email']}")
+        if campo == '1':
+            nuovo_dato = input("Inserisci il nuovo nome:")
+            alunno['nome'] = nuovo_dato
+            print(f"Nome cambiato con {alunno['nome']}!")
+            print(alunno)
+        elif campo == '2':
+            nuovo_dato = input("Inserisci il nuovo cognome:")
+            alunno['cognome'] = nuovo_dato
+            print(f"Cognome cambiato con {alunno['cognome']}")
+        elif campo == '3':
+            nuovo_dato = input("Inserisci la nuova E-mail:")
+            alunno['email'] = nuovo_dato
+            print(f"E-mail cambiata con {alunno['email']}")
+        else:
+            print("\n Errore: Dato non presente nel registro.")
     else:
-        print("\n Errore: Dato non presente nel registro.")
+        print("Errore: Matricola non presente nel database.")
 
     alunno['data modifica'] = datetime.now().isoformat()
-    alunni[matricola] = alunno
-    salva_alunni(alunni)
+    alunni[matricola].update(alunno)
+    salva_alunni(dati)
 
 def elimina_alunno():
     """Elimina i dati relativi all'alunno selezionato"""
-    alunni = carica_database()
+    dati = carica_database()
 
-    if not alunni:
+    if not dati:
           print("\nNessun alunno presente nel database")
           return
+    
+    alunni = dati["alunni"]
      
     matricola = input("\nSeleziona l'alunno di qui vuoi eliminare i dati digitando la sua matricola (es.MAT001):")
 
@@ -161,7 +168,7 @@ def elimina_alunno():
     else:
         print("\nComando non valido.")
 
-    salva_alunni(alunni)
+    salva_alunni(dati)
 
 if not os.path.exists("lista_alunni.json"):
     matricola_iniziale = crea_matricola()
@@ -169,25 +176,26 @@ if not os.path.exists("lista_alunni.json"):
     timestamp_iniziale = datetime.now().isoformat()
 
     database = {
-    "alunni": {
-        matricola_iniziale: {
-            "nome": "Matteo",
-            "cognome": "Braida",
-            "email": "braida.matteo@its.com",
-            "matricola": matricola_iniziale,
-            "data creazione": timestamp_iniziale,
-            "data modifica": timestamp_iniziale
-        },
-
-        task_iniziale: {
-            "id": task_iniziale,
-            "descrizione": "esercizio python",
-            "alunno_matricola": matricola_iniziale,
-            "stato": "assegnato",
-            "data assegnazione": datetime.now().isoformat(),
-            "voto": 8
-        }
-    },
+     "alunni": {
+         matricola_iniziale: {
+             "nome": "Matteo",
+             "cognome": "Braida",
+             "email": "braida.matteo@its.com",
+             "matricola": matricola_iniziale,
+             "data creazione": timestamp_iniziale,
+             "data modifica": timestamp_iniziale
+         },
+     },
+     "compiti":{
+         task_iniziale: {
+             "id": task_iniziale,
+             "descrizione": "esercizio python",
+             "alunno_matricola": matricola_iniziale,
+             "stato": "assegnato",
+             "data assegnazione": datetime.now().isoformat(),
+             "voto": 8
+         }
+     }
 }
     
     crea_alunni(database)
@@ -227,6 +235,7 @@ while True:
         matricola, task, nuovo_alunno = aggiungi_alunno()
         dati = carica_database()
         dati["alunni"].update(nuovo_alunno["alunni"])
+        dati["compiti"].update(nuovo_alunno["compiti"])
         alunni = dati
         salva_alunni(alunni)
         print(f"\nAlunno aggiunto con successo!")

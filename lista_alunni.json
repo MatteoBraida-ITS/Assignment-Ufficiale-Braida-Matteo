@@ -5,63 +5,25 @@
             "cognome": "Braida",
             "email": "braida.matteo@its.com",
             "matricola": "MAT001",
-            "data creazione": "2025-11-27T17:36:50.071398",
-            "data modifica": "2025-11-27T17:36:50.071398"
-        },
+            "data creazione": "2025-11-28T02:22:34.148603",
+            "data modifica": "2025-11-28T02:22:34.148603"
+        }
+    },
+    "compiti": {
         "TASK001": {
             "id": "TASK001",
             "descrizione": "esercizio python",
             "alunno_matricola": "MAT001",
             "stato": "assegnato",
-            "data assegnazione": "2025-11-27T17:36:50.071416",
+            "data assegnazione": "2025-11-28T02:22:34.148616",
             "voto": 8
-        },
-        "MAT002": {
-            "nome": "p",
-            "cognome": "g",
-            "email": "g.p@its.com",
-            "matricola": "MAT002",
-            "data creazione": "2025-11-27T17:37:10.129924",
-            "data modifica": "2025-11-27T17:37:10.129924"
         },
         "TASK002": {
             "id": "TASK002",
             "descrizione": "",
             "alunno_matricola": "MAT002",
             "stato": "",
-            "data assegnazione": "2025-11-27T17:37:20.161739",
-            "voto": 0
-        },
-        "MAT003": {
-            "nome": "g",
-            "cognome": "b",
-            "email": "b.g@its.com",
-            "matricola": "MAT003",
-            "data creazione": "2025-11-27T17:37:29.890044",
-            "data modifica": "2025-11-27T17:37:29.890044"
-        },
-        "TASK003": {
-            "id": "TASK003",
-            "descrizione": "",
-            "alunno_matricola": "MAT003",
-            "stato": "",
-            "data assegnazione": "2025-11-27T17:37:46.601513",
-            "voto": 0
-        },
-        "MAT004": {
-            "nome": "l",
-            "cognome": "n",
-            "email": "n.l@its.com",
-            "matricola": "MAT004",
-            "data creazione": "2025-11-27T17:37:51.450183",
-            "data modifica": "2025-11-27T17:37:51.450183"
-        },
-        "TASK004": {
-            "id": "TASK004",
-            "descrizione": "",
-            "alunno_matricola": "MAT004",
-            "stato": "",
-            "data assegnazione": "2025-11-27T17:38:08.809451",
+            "data assegnazione": "2025-11-28T02:22:51.466980",
             "voto": 0
         }
     }
