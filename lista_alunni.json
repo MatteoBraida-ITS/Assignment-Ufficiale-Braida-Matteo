@@ -5,25 +5,33 @@
             "cognome": "Braida",
             "email": "braida.matteo@its.com",
             "matricola": "MAT001",
-            "data creazione": "2025-11-28T02:22:34.148603",
-            "data modifica": "2025-11-28T02:22:34.148603"
+            "data creazione": "2025-11-29T16:43:31.409710",
+            "data modifica": "2025-11-29T16:43:31.409710"
+        },
+        "MAT003": {
+            "nome": "e",
+            "cognome": "e",
+            "email": "e",
+            "matricola": "MAT003",
+            "data creazione": "2025-11-29T16:44:01.372474",
+            "data modifica": "2025-11-29T16:44:01.372474"
         }
     },
     "compiti": {
         "TASK001": {
             "id": "TASK001",
             "descrizione": "esercizio python",
-            "alunno_matricola": "MAT001",
+            "matricola": "MAT001",
             "stato": "assegnato",
-            "data assegnazione": "2025-11-28T02:22:34.148616",
+            "data assegnazione": "2025-11-29T16:43:31.409717",
             "voto": 8
         },
-        "TASK002": {
-            "id": "TASK002",
+        "TASK003": {
+            "id": "TASK003",
             "descrizione": "",
-            "alunno_matricola": "MAT002",
+            "matricola": "MAT003",
             "stato": "",
-            "data assegnazione": "2025-11-28T02:22:51.466980",
+            "data assegnazione": "2025-11-29T16:44:04.085188",
             "voto": 0
         }
     }

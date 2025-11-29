@@ -53,8 +53,6 @@ def visualizza_alunni():
         for matricola, alunno in alunni.items():
             if matricola.startswith("MAT"):
                 print(f"{matricola}:\n -Nome:{alunno["nome"]}\n -Cognome:{alunno["cognome"]}\n -E-mail:{alunno["email"]}")
-            else: 
-                continue
     else:
         print("Nessun alunno presente.")
 
@@ -83,7 +81,7 @@ def aggiungi_alunno():
         task: {
            "id": task,
            "descrizione": "",
-           "alunno_matricola": matricola,
+           "matricola": matricola,
            "stato": "",
            "data assegnazione": datetime.now().isoformat(),
            "voto": 0
@@ -147,7 +145,8 @@ def elimina_alunno():
           return
     
     alunni = dati["alunni"]
-     
+    compiti = dati["compiti"]
+    
     matricola = input("\nSeleziona l'alunno di qui vuoi eliminare i dati digitando la sua matricola (es.MAT001):")
 
     if matricola not in alunni:
@@ -161,6 +160,16 @@ def elimina_alunno():
 
     if conferma == 'y':
         alunni.pop(matricola)
+
+        task_da_eliminare = []
+
+        for task_id, task_data in compiti.items():
+            if task_data["matricola"] == matricola:
+                task_da_eliminare.append(task_id)
+    
+        for task_id in task_da_eliminare:
+            compiti.pop(task_id)
+
         print(f"\nL'alunno {alunno['nome']} {alunno['cognome']} con matricola {matricola} è stato rimosso dal database.")
     elif conferma == 'n':
         print("\nOperazione annullata.")
@@ -190,7 +199,7 @@ if not os.path.exists("lista_alunni.json"):
          task_iniziale: {
              "id": task_iniziale,
              "descrizione": "esercizio python",
-             "alunno_matricola": matricola_iniziale,
+             "matricola": matricola_iniziale,
              "stato": "assegnato",
              "data assegnazione": datetime.now().isoformat(),
              "voto": 8
@@ -205,6 +214,10 @@ else:
     matricole = [int(key.replace("MAT","")) for key in alunni_esistenti.keys() if key.startswith("MAT")]
     if matricole:
         contatore_matricola = max(matricole)
+
+    tasks = [int(key.replace("TASK","")) for key in alunni_esistenti.keys() if key.startswith("TASK")]
+    if tasks:
+        contatore_task = max(tasks)
 
 while True:
 
@@ -254,4 +267,3 @@ while True:
         print("\n")
         box_testo("ELIMINA DATI ALUNNO")
         elimina_alunno()
-
