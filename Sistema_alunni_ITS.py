@@ -180,6 +180,34 @@ def elimina_alunno():
 
     salva_alunni(dati)
 
+def assegna_compito():
+    """Assegna un compito ad un alunno"""
+    dati = carica_database()
+
+    matricola = input("Seleziona l'alunno a cui assegnare il compito digitando la sua matricola (es.MAT001):")
+
+    compiti = dati["compiti"]
+    if matricola in dati["alunni"]:
+        compito_da_assegnare = input(f"Quale compito vuoi asseganre all'alunno {matricola}?:")
+    else:
+        print("Errore: Matricola non presente nel database.")
+
+    
+    nuovo_compito = {
+        task: {
+           "id": task,
+           "descrizione": compito_da_assegnare,
+           "matricola": matricola,
+           "stato": "assegnato",
+           "data assegnazione": datetime.now().isoformat(),
+           "voto": 0
+        }
+    }
+
+
+
+
+    
 if not os.path.exists("lista_alunni.json"):
     matricola_iniziale = crea_matricola()
     task_iniziale = crea_task()
@@ -271,3 +299,8 @@ while True:
         print("\n")
         box_testo("ELIMINA DATI ALUNNO")
         elimina_alunno()
+
+    if scelta_menu == 'e':
+        print('\n')
+        box_testo("ASSEGNA COMPITO A STUDENTE")
+        assegna_compito()
