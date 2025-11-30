@@ -59,6 +59,7 @@ def visualizza_alunni():
 def aggiungi_alunno():
     """Acquisisce i dati di un nuovo alunno""" 
     matricola = crea_matricola()
+    print(matricola)
     task = crea_task()
     timestamp = datetime.now().isoformat() 
 
@@ -211,11 +212,15 @@ if not os.path.exists("lista_alunni.json"):
     print(f"File 'lista_alunni.json' creato con alunno iniziale {matricola_iniziale}")
 else:
     alunni_esistenti = carica_database()
-    matricole = [int(key.replace("MAT","")) for key in alunni_esistenti.keys() if key.startswith("MAT")]
+    alunni = alunni_esistenti["alunni"]
+    compiti = alunni_esistenti["compiti"]
+
+
+    matricole = [int(key.replace("MAT","")) for key in alunni.keys() if key.startswith("MAT")]
     if matricole:
         contatore_matricola = max(matricole)
 
-    tasks = [int(key.replace("TASK","")) for key in alunni_esistenti.keys() if key.startswith("TASK")]
+    tasks = [int(key.replace("TASK","")) for key in compiti.keys() if key.startswith("TASK")]
     if tasks:
         contatore_task = max(tasks)
 
@@ -249,8 +254,7 @@ while True:
         dati = carica_database()
         dati["alunni"].update(nuovo_alunno["alunni"])
         dati["compiti"].update(nuovo_alunno["compiti"])
-        alunni = dati
-        salva_alunni(alunni)
+        salva_alunni(dati)
         print(f"\nAlunno aggiunto con successo!")
 
     if scelta_menu == 'b':
