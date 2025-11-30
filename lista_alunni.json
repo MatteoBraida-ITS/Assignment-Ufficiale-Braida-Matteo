@@ -1,86 +1,46 @@
 {
     "alunni": {
         "MAT001": {
-            "nome": "r",
-            "cognome": "rt",
-            "email": "rrt",
+            "nome": "Matteo",
+            "cognome": "Braida",
+            "email": "braida.matteo@its.com",
             "matricola": "MAT001",
-            "data creazione": "2025-11-30T11:34:13.965859",
-            "data modifica": "2025-11-30T11:34:13.965859"
+            "data creazione": "2025-11-30T16:02:35.432091",
+            "data modifica": "2025-11-30T16:02:35.432091"
         },
         "MAT002": {
-            "nome": "y",
-            "cognome": "y",
-            "email": "y",
+            "nome": "r",
+            "cognome": "g",
+            "email": "rg",
             "matricola": "MAT002",
-            "data creazione": "2025-11-30T04:22:40.532376",
-            "data modifica": "2025-11-30T04:22:40.532376"
-        },
-        "MAT005": {
-            "nome": "re",
-            "cognome": "olre",
-            "email": "lorel",
-            "matricola": "MAT005",
-            "data creazione": "2025-11-30T13:17:50.513779",
-            "data modifica": "2025-11-30T13:17:50.513779"
-        },
-        "MAT006": {
-            "nome": "nanni",
-            "cognome": "Twitch",
-            "email": "t.com",
-            "matricola": "MAT006",
-            "data creazione": "2025-11-30T13:19:12.126413",
-            "data modifica": "2025-11-30T13:20:38.141103"
-        },
-        "MAT007": {
-            "nome": "d",
-            "cognome": "d",
-            "email": "d",
-            "matricola": "MAT007",
-            "data creazione": "2025-11-30T13:19:56.633610",
-            "data modifica": "2025-11-30T13:19:56.633610"
+            "data creazione": "2025-11-30T16:05:07.082896",
+            "data modifica": "2025-11-30T16:05:07.082896"
         }
     },
     "compiti": {
         "TASK001": {
             "id": "TASK001",
-            "descrizione": "",
-            "matricola": "MAT001",
-            "stato": "",
-            "data assegnazione": "2025-11-30T11:34:23.703405",
-            "voto": 0
-        },
-        "TASK002": {
-            "id": "TASK002",
-            "descrizione": "",
+            "descrizione": null,
             "matricola": "MAT002",
-            "stato": "",
-            "data assegnazione": "2025-11-30T04:22:47.672948",
-            "voto": 0
+            "stato": "assegnato",
+            "data assegnazione": "2025-11-30T16:04:48.757955",
+            "voto": ""
         },
-        "TASK005": {
-            "id": "TASK005",
-            "descrizione": "",
-            "matricola": "MAT005",
-            "stato": "",
-            "data assegnazione": "2025-11-30T13:18:35.058763",
-            "voto": 0
+        "TASK003": {
+            "id": "TASK003",
+            "descrizione": "esercizio python",
+            "matricola": "MAT002",
+            "stato": "assegnato",
+            "data assegnazione": "2025-11-30T16:05:50.024615",
+            "voto": ""
         },
-        "TASK006": {
-            "id": "TASK006",
-            "descrizione": "",
-            "matricola": "MAT006",
-            "stato": "",
-            "data assegnazione": "2025-11-30T13:19:24.071127",
-            "voto": 0
-        },
-        "TASK007": {
-            "id": "TASK007",
-            "descrizione": "",
-            "matricola": "MAT007",
-            "stato": "",
-            "data assegnazione": "2025-11-30T13:20:00.948559",
-            "voto": 0
+        "TASK004": {
+            "id": "TASK004",
+            "descrizione": "es java",
+            "matricola": "MAT001",
+            "stato": "assegnato",
+            "data assegnazione": "2025-11-30T16:06:56.478969",
+            "voto": ""
         }
     }
 }

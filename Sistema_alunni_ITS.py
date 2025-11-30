@@ -20,7 +20,7 @@ def crea_matricola():
     global contatore_matricola
     contatore_matricola += 1
     return f"MAT{contatore_matricola:03d}"
-
+    
 def crea_task():
      global contatore_task
      contatore_task += 1
@@ -59,7 +59,6 @@ def visualizza_alunni():
 def aggiungi_alunno():
     """Acquisisce i dati di un nuovo alunno""" 
     matricola = crea_matricola()
-    print(matricola)
     task = crea_task()
     timestamp = datetime.now().isoformat() 
 
@@ -79,14 +78,7 @@ def aggiungi_alunno():
         }
     },
         "compiti": {
-        task: {
-           "id": task,
-           "descrizione": "",
-           "matricola": matricola,
-           "stato": "",
-           "data assegnazione": datetime.now().isoformat(),
-           "voto": 0
-        }
+        
     },
 }
     
@@ -162,15 +154,6 @@ def elimina_alunno():
     if conferma == 'y':
         alunni.pop(matricola)
 
-        task_da_eliminare = []
-
-        for task_id, task_data in compiti.items():
-            if task_data["matricola"] == matricola:
-                task_da_eliminare.append(task_id)
-    
-        for task_id in task_da_eliminare:
-            compiti.pop(task_id)
-
         print(f"\nL'alunno {alunno['nome']} {alunno['cognome']} con matricola {matricola} è stato rimosso dal database.")
     elif conferma == 'n':
         print("\nOperazione annullata.")
@@ -183,10 +166,11 @@ def elimina_alunno():
 def assegna_compito():
     """Assegna un compito ad un alunno"""
     dati = carica_database()
-
+    
     matricola = input("Seleziona l'alunno a cui assegnare il compito digitando la sua matricola (es.MAT001):")
 
-    compiti = dati["compiti"]
+    task = crea_task()
+    compito_da_assegnare = None
     if matricola in dati["alunni"]:
         compito_da_assegnare = input(f"Quale compito vuoi asseganre all'alunno {matricola}?:")
     else:
@@ -200,17 +184,14 @@ def assegna_compito():
            "matricola": matricola,
            "stato": "assegnato",
            "data assegnazione": datetime.now().isoformat(),
-           "voto": 0
+           "voto": ""
         }
     }
 
+    return matricola, task, nuovo_compito
 
-
-
-    
 if not os.path.exists("lista_alunni.json"):
     matricola_iniziale = crea_matricola()
-    task_iniziale = crea_task()
     timestamp_iniziale = datetime.now().isoformat()
 
     database = {
@@ -225,17 +206,10 @@ if not os.path.exists("lista_alunni.json"):
          },
      },
      "compiti":{
-         task_iniziale: {
-             "id": task_iniziale,
-             "descrizione": "esercizio python",
-             "matricola": matricola_iniziale,
-             "stato": "assegnato",
-             "data assegnazione": datetime.now().isoformat(),
-             "voto": 8
-         }
+         
      }
-}
-    
+    }
+
     crea_alunni(database)
     print(f"File 'lista_alunni.json' creato con alunno iniziale {matricola_iniziale}")
 else:
@@ -243,14 +217,9 @@ else:
     alunni = alunni_esistenti["alunni"]
     compiti = alunni_esistenti["compiti"]
 
-
     matricole = [int(key.replace("MAT","")) for key in alunni.keys() if key.startswith("MAT")]
     if matricole:
         contatore_matricola = max(matricole)
-
-    tasks = [int(key.replace("TASK","")) for key in compiti.keys() if key.startswith("TASK")]
-    if tasks:
-        contatore_task = max(tasks)
 
 while True:
 
@@ -303,4 +272,8 @@ while True:
     if scelta_menu == 'e':
         print('\n')
         box_testo("ASSEGNA COMPITO A STUDENTE")
-        assegna_compito()
+        matricola, task, nuovo_compito = assegna_compito()
+        dati = carica_database()
+        dati["compiti"].update(nuovo_compito)
+        salva_alunni(dati)
+        print("Compito assegnato con successo!")
