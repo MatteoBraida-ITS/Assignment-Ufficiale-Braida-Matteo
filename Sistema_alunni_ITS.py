@@ -254,7 +254,7 @@ def visualizza_statistiche():
                continue
            else:
                conto_compiti_completati += 1
-           
+
    voti_validi = [voto for voto in voti if voto is not None]
    if voti_validi:
     media = sum(voti_validi) / len(voti_validi)
@@ -267,6 +267,23 @@ def visualizza_statistiche():
    print(f"Compiti completati: {conto_compiti_completati}")
    print(f"Voto massimo matricola {matricola}: {max(voti_validi)}")
    print(f"Voto minimo matricola {matricola}: {min(voti_validi)}")
+
+   for task_id, task_data in compiti.items():
+       if task_data["matricola"] == matricola:
+           esercizio = task_data["descrizione"]
+           voto = task_data["voto"]
+           data_voto = task_data["data modifica"]
+           print(f"Voto per {esercizio}: {voto} conseguito in data {data_voto}")
+
+def ranking_alunni():
+    """Ritorna le media dei voti di ogni alunno presente nel database in ordine, dalla più alta alla più bassa."""
+    dati = carica_database()
+    compiti = dati["compiti"]
+    voti = []
+    medie = []
+
+    #for task_id, task_data in compiti.items():
+    #    if task_data["matricola"] == ""
 
 
 if not os.path.exists("lista_alunni.json"):
