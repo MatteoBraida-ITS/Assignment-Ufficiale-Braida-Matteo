@@ -5,25 +5,17 @@
             "cognome": "Braida",
             "email": "braida.matteo@its.com",
             "matricola": "MAT001",
-            "data creazione": "2025-12-01 00-18-42",
-            "data modifica": "2025-12-01 00-18-42"
-        },
-        "MAT002": {
-            "nome": "t",
-            "cognome": "m",
-            "email": "tm",
-            "matricola": "MAT002",
-            "data creazione": "2025-12-01 00-18-56",
-            "data modifica": "2025-12-01 00-18-56"
+            "data creazione": "2025-12-01 01-58-26",
+            "data modifica": "2025-12-01 01-58-26"
         }
     },
     "compiti": {
-        "TASK003": {
-            "id": "TASK003",
+        "TASK002": {
+            "id": "TASK002",
             "descrizione": "es python",
-            "matricola": "MAT002",
+            "matricola": "MAT001",
             "stato": "assegnato",
-            "data assegnazione": "2025-12-01 00-19-16",
+            "data assegnazione": "2025-12-01 01-58-53",
             "voto": null
         }
     }

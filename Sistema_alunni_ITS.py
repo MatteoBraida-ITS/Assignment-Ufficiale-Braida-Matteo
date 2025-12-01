@@ -59,7 +59,6 @@ def visualizza_alunni():
 def aggiungi_alunno():
     """Acquisisce i dati di un nuovo alunno""" 
     matricola = crea_matricola()
-    task = crea_task()
     timestamp = datetime.now().strftime("%Y-%m-%d %H-%M-%S") 
 
     nome = input("Inserisci il nome del nuovo alunno:")
@@ -80,7 +79,7 @@ def aggiungi_alunno():
         "compiti": {}
 }
     
-    return matricola, task, nuovo_alunno
+    return matricola, nuovo_alunno
 
 def modifica_dati_alunno():
     """Modica i dati degli studenti contenuti nel file JSON"""
@@ -122,7 +121,7 @@ def modifica_dati_alunno():
     else:
         print("Errore: Matricola non presente nel database.")
 
-    alunno['data modifica'] = datetime.now().strftime("%Y-%m-%d %H-%M-%S")()
+    alunno['data modifica'] = datetime.now().strftime("%Y-%m-%d %H-%M-%S")
     alunni[matricola].update(alunno)
     salva_alunni(dati)
 
@@ -331,7 +330,7 @@ while True:
     if scelta_menu == 'a':
         print("\n")
         box_testo("INSERISCI NUOVO ALUNNO")
-        matricola, task, nuovo_alunno = aggiungi_alunno()
+        matricola, nuovo_alunno = aggiungi_alunno()
         dati = carica_database()
         dati["alunni"].update(nuovo_alunno["alunni"])
         dati["compiti"].update(nuovo_alunno["compiti"])
