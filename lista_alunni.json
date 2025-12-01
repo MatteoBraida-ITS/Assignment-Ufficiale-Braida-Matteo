@@ -5,54 +5,18 @@
             "cognome": "Braida",
             "email": "braida.matteo@its.com",
             "matricola": "MAT001",
-            "data creazione": "2025-12-01 01-58-26",
-            "data modifica": "2025-12-01 01-58-26"
-        },
-        "MAT002": {
-            "nome": "Giacomo",
-            "cognome": "Rossi",
-            "email": "rossi.giacomo@its.com",
-            "matricola": "MAT002",
-            "data creazione": "2025-12-01 16-41-20",
-            "data modifica": "2025-12-01 16-41-20"
+            "data creazione": "2025-12-01 23-28-30",
+            "data modifica": "2025-12-01 23-28-30"
         }
     },
     "compiti": {
-        "TASK002": {
-            "id": "TASK002",
+        "TASK001": {
+            "id": "TASK001",
             "descrizione": "es python",
             "matricola": "MAT001",
             "stato": "assegnato",
-            "data assegnazione": "2025-12-01 01-58-53",
-            "voto": 8,
-            "data modifica": "2025-12-01 16-44-14"
-        },
-        "TASK003": {
-            "id": "TASK003",
-            "descrizione": "es python",
-            "matricola": "MAT002",
-            "stato": "assegnato",
-            "data assegnazione": "2025-12-01 16-42-12",
-            "voto": 5,
-            "data modifica": "2025-12-01 16-45-19"
-        },
-        "TASK004": {
-            "id": "TASK004",
-            "descrizione": "es java",
-            "matricola": "MAT001",
-            "stato": "assegnato",
-            "data assegnazione": "2025-12-01 16-43-25",
-            "voto": 4,
-            "data modifica": "2025-12-01 16-45-48"
-        },
-        "TASK005": {
-            "id": "TASK005",
-            "descrizione": "es java",
-            "matricola": "MAT002",
-            "stato": "assegnato",
-            "data assegnazione": "2025-12-01 16-43-35",
-            "voto": 9,
-            "data modifica": "2025-12-01 16-45-58"
+            "data assegnazione": "2025-12-01 23-28-55",
+            "voto": null
         }
     }
 }

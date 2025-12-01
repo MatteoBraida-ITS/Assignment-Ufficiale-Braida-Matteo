@@ -279,16 +279,38 @@ def ranking_alunni():
     """Ritorna le media dei voti di ogni alunno presente nel database in ordine, dalla più alta alla più bassa."""
     dati = carica_database()
     compiti = dati["compiti"]
-    voti = []
-    medie = []
+    voti_per_alunno = {}
+    medie = {}
 
-    #for task_id, task_data in compiti.items():
-    #    if task_data["matricola"] == ""
+    for task_id, task_data in compiti.items():
+        alunno = task_data.get("matricola")
+        voto = task_data.get("voto")
 
+        if alunno is None or voto is None:
+            print(f"Il compito '{task_data.get("descrizione", "Sconosciuto")}' non ha un voto assegnato o una matricola valida.")
+            continue
+
+        if alunno not in voti_per_alunno:
+            voti_per_alunno[alunno] = []
+
+        voti_per_alunno[alunno].append(voto)
+
+    for alunno, voti in voti_per_alunno.items():
+        if voti:
+            media = sum(voti) / len(voti)
+            medie[alunno] = media
+
+    ranking_medie = sorted(
+        medie.items(),
+        key=lambda item: item[1],
+        reverse=True
+    )
+    
+    for alunno, media in ranking_medie:
+         print(f"Alunno: {alunno}, Media voti: {media}")
 
 if not os.path.exists("lista_alunni.json"):
     matricola_iniziale = crea_matricola()
-    task_iniziale = crea_task()
     timestamp_iniziale = datetime.now().strftime("%Y-%m-%d %H-%M-%S")
 
     database = {
@@ -392,3 +414,8 @@ while True:
         print("\n")
         box_testo("VISUALIZZA STATISTICHE ALUNNO")
         visualizza_statistiche()
+
+    if scelta_menu == 'i':
+        print("\n")
+        box_testo("RANKING ALUNNI PER MEDIA VOTI")
+        ranking_alunni()
