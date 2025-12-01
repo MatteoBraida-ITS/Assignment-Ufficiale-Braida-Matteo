@@ -1,24 +1,11 @@
-{
-    "alunni": {
-        "MAT001": {
-            "nome": "Matteo",
-            "cognome": "Braida",
-            "email": "braida.matteo@its.com",
-            "matricola": "MAT001",
-            "data creazione": "2025-12-01 01-58-26",
-            "data modifica": "2025-12-01 01-58-26"
-        },
-        "MAT002": {
-            "nome": "Giacomo",
-            "cognome": "Rossi",
-            "email": "rossi.giacomo@its.com",
-            "matricola": "MAT002",
-            "data creazione": "2025-12-01 16-41-20",
-            "data modifica": "2025-12-01 16-41-20"
-        }
-    },
-    "compiti": {
-        "TASK002": {
+voti1 = []
+voti2 = []
+medie = []
+
+
+
+compiti = {
+    "TASK002": {
             "id": "TASK002",
             "descrizione": "es python",
             "matricola": "MAT001",
@@ -27,7 +14,7 @@
             "voto": 8,
             "data modifica": "2025-12-01 16-44-14"
         },
-        "TASK003": {
+    "TASK003": {
             "id": "TASK003",
             "descrizione": "es python",
             "matricola": "MAT002",
@@ -54,5 +41,24 @@
             "voto": 9,
             "data modifica": "2025-12-01 16-45-58"
         }
-    }
+
 }
+
+for task_id, task_data in compiti.items():
+    if task_data["matricola"] == "MAT001":
+        voto = task_data["voto"]
+        voti1.append(voto)
+        media1 = sum(voti1) / len(voti1) 
+
+for task_id, task_data in compiti.items():
+    if task_data["matricola"] == "MAT002":
+        voto = task_data["voto"]
+        voti2.append(voto)
+        media2 = sum(voti2) / len(voti2)
+
+medie.append(media1)
+medie.append(media2)
+medie.sort(reverse=True)
+print (medie)
+
+
