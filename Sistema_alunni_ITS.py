@@ -5,6 +5,7 @@ import os
 
 contatore_matricola = 0
 contatore_task = 0
+cartella = 'backup_dati_alunni'
 
 def box_testo(titolo: str):
     larghezza = len(titolo) + 4 
@@ -305,10 +306,29 @@ def ranking_alunni():
         key=lambda item: item[1],
         reverse=True
     )
-    
+
     for alunno, media in ranking_medie:
          print(f"Alunno: {alunno}, Media voti: {media}")
 
+def report_compiti():
+    """Riporta a terminale i compiti assegnati ma a cui non è ancora stato assegnato un voto."""
+    dati = carica_database()
+    compiti = dati.get("compiti")
+
+    if compiti:
+        for task_id, task_data in compiti.items():
+            if task_data["voto"] == None:
+                print(f"Il compito {task_id} assegnato alla matricola {task_data["matricola"]} non è stato completato.")
+    else: 
+        print("Nessuno compito presente nel database.")
+
+#def backup_dati_alunni():
+#    """Crea un backup del file JSON dentro una cartella 'backup'"""
+#
+#    if not os.path.exists(cartella):
+
+
+    
 if not os.path.exists("lista_alunni.json"):
     matricola_iniziale = crea_matricola()
     timestamp_iniziale = datetime.now().strftime("%Y-%m-%d %H-%M-%S")
@@ -419,3 +439,8 @@ while True:
         print("\n")
         box_testo("RANKING ALUNNI PER MEDIA VOTI")
         ranking_alunni()
+
+    if scelta_menu == 'l':
+        print("\n")
+        box_testo("REPORT COMPITI NON COMPLETATI")
+        report_compiti()
