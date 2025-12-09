@@ -1,0 +1,31 @@
+{
+    "alunni": {
+        "MAT001": {
+            "nome": "Matteo",
+            "cognome": "Braida",
+            "email": "braida.matteo@its.com",
+            "matricola": "MAT001",
+            "data creazione": "2025-12-01 23-28-30",
+            "data modifica": "2025-12-01 23-28-30"
+        }
+    },
+    "compiti": {
+        "TASK001": {
+            "id": "TASK001",
+            "descrizione": "es python",
+            "matricola": "MAT001",
+            "stato": "assegnato",
+            "data assegnazione": "2025-12-01 23-28-55",
+            "voto": null
+        },
+        "TASK002": {
+            "id": "TASK002",
+            "descrizione": "es java",
+            "matricola": "MAT001",
+            "stato": "assegnato",
+            "data assegnazione": "2025-12-04 15-32-26",
+            "voto": 8,
+            "data modifica": "2025-12-04 15-32-52"
+        }
+    }
+}

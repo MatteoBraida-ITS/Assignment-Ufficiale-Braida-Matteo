@@ -322,12 +322,29 @@ def report_compiti():
     else: 
         print("Nessuno compito presente nel database.")
 
-#def backup_dati_alunni():
-#    """Crea un backup del file JSON dentro una cartella 'backup'"""
-#
+def backup_dati_alunni():
+    """Crea un backup del file JSON dentro una cartella 'backup'"""
+    dati = carica_database()
+
+    if not os.path.exists(cartella):
+        os.makedirs(cartella)
+
+    timestamp = datetime.now().strftime("%Y-%m-%d %H-%M-%S")
+    nome_file = f"backup_dati_alunni_{timestamp}.json"
+    percorso_file = os.path.join(cartella, nome_file)
+    with open(percorso_file, "w", encoding="utf-8") as file:
+        json.dump(dati, file, indent=4)
+    print(f"Backup creato con successo in {percorso_file}")
+
+#def carica_dati_backup():
+#    """Carica i dati da un backup"""
 #    if not os.path.exists(cartella):
-
-
+#        os.makedirs(cartella)
+#
+#    backup_files = [f for f in os.listdir(cartella) if f.endswith(".json")]
+#    if not backup_files:
+#        print("Nessun backup presente.")
+#        return
     
 if not os.path.exists("lista_alunni.json"):
     matricola_iniziale = crea_matricola()
@@ -444,3 +461,8 @@ while True:
         print("\n")
         box_testo("REPORT COMPITI NON COMPLETATI")
         report_compiti()
+    
+    if scelta_menu == 'm':
+        print("\n")
+        box_testo("SALVA DATI (BACKUP)")
+        backup_dati_alunni()
