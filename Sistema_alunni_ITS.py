@@ -336,16 +336,26 @@ def backup_dati_alunni():
         json.dump(dati, file, indent=4)
     print(f"Backup creato con successo in {percorso_file}")
 
-#def carica_dati_backup():
-#    """Carica i dati da un backup"""
-#    if not os.path.exists(cartella):
-#        os.makedirs(cartella)
-#
-#    backup_files = [f for f in os.listdir(cartella) if f.endswith(".json")]
-#    if not backup_files:
-#        print("Nessun backup presente.")
-#        return
-    
+def carica_dati_backup():
+    """Carica i dati da un backup"""
+    if not os.path.exists(cartella):
+        os.makedirs(cartella)
+
+    backup_files = [f for f in os.listdir(cartella) if f.endswith(".json")]
+    if not backup_files:
+        print("Nessun backup presente.")
+        return
+
+    for file in backup_files:
+        percorso_file = os.path.join(cartella, file)
+        with open(percorso_file, "r", encoding="utf-8") as file:
+            dati = json.load(file)
+            if dati:
+                dati["alunni"].update(dati["alunni"])
+                dati["compiti"].update(dati["compiti"])
+                salva_alunni(dati)
+                print(f"Dati caricati con successo da {percorso_file}")
+
 if not os.path.exists("lista_alunni.json"):
     matricola_iniziale = crea_matricola()
     timestamp_iniziale = datetime.now().strftime("%Y-%m-%d %H-%M-%S")
@@ -466,3 +476,8 @@ while True:
         print("\n")
         box_testo("SALVA DATI (BACKUP)")
         backup_dati_alunni()
+
+    if scelta_menu == 'n':
+        print("\n")
+        box_testo("CARICA DATI (BACKUP)")
+        carica_dati_backup()
