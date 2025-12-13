@@ -7,6 +7,14 @@
             "matricola": "MAT001",
             "data creazione": "2025-12-01 23-28-30",
             "data modifica": "2025-12-01 23-28-30"
+        },
+        "MAT002": {
+            "nome": "Giovanni",
+            "cognome": "Furla",
+            "email": "furla.giovanni@its.com",
+            "matricola": "MAT002",
+            "data creazione": "2025-12-12 15-02-36",
+            "data modifica": "2025-12-12 15-02-36"
         }
     },
     "compiti": {
@@ -26,6 +34,14 @@
             "data assegnazione": "2025-12-04 15-32-26",
             "voto": 8,
             "data modifica": "2025-12-04 15-32-52"
+        },
+        "TASK003": {
+            "id": "TASK003",
+            "descrizione": "esercizio python",
+            "matricola": "MAT002",
+            "stato": "assegnato",
+            "data assegnazione": "2025-12-12 15-04-18",
+            "voto": null
         }
     }
 }
