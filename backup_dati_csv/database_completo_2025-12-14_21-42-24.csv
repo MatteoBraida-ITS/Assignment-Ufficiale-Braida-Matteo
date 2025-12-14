@@ -1,0 +1,8 @@
+﻿Nome,Cognome,Email,Matricola,Descrizione_Compito,ID_Compito,Stato,Voto,Data_Assegnazione
+Matteo,Braida,braida.matteo@its.com,MAT001,es python,TASK001,registrato,6,2025-12-01 23-28-55
+Matteo,Braida,braida.matteo@its.com,MAT001,es java,TASK002,assegnato,8,2025-12-04 15-32-26
+Giovanni,Furlani,furla.giovanni@its.com,MAT002,esercizio python,TASK003,registrato,7,2025-12-12 15-04-18
+Giovanni,Furlani,furla.giovanni@its.com,MAT002,es java,TASK005,registrato,8,2025-12-14 16:31:20
+Giuseppe,Bianchi,bianchi.giuseppe@its.com,MAT003,es python,TASK004,registrato,6,2025-12-14 16:31:03
+Giuseppe,Bianchi,bianchi.giuseppe@its.com,MAT003,es java,TASK006,assegnato,,2025-12-14 16:38:00
+Tommaso,Marrone,marrone.tommaso@its.com,MAT005,,,,,
