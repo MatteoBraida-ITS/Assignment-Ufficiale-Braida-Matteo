@@ -50,12 +50,12 @@ def salva_alunni(lista):
 def visualizza_alunni():
     """Stampa una lista con tutti i dati degli studenti presenti nel file JSON"""
     dati = carica_database()
-    alunni = dati["alunni"]
+    alunni = dati.get("alunni", {})
 
     if alunni:
         for matricola, alunno in alunni.items():
             if matricola.startswith("MAT"):
-                print(f"{matricola}:\n -Nome:{alunno["nome"]}\n -Cognome:{alunno["cognome"]}\n -E-mail:{alunno["email"]}")
+                print(f"{matricola}:\n -Nome:{alunno['nome']}\n -Cognome:{alunno['cognome']}\n -E-mail:{alunno['email']}")
     else:
         print("Nessun alunno presente.")
 
@@ -107,9 +107,10 @@ def aggiungi_alunno():
     """Acquisisce i dati di un nuovo alunno""" 
     dati = carica_database()
 
-    if not dati:
-          print("\nNessun alunno presente nel database")
-          return
+    if "alunni" not in dati:
+        dati["alunni"] = {}
+    if "compiti" not in dati:
+        dati["compiti"] = {}
 
     matricola = crea_matricola()
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
@@ -129,22 +130,15 @@ def aggiungi_alunno():
     print("\n")
     email = richiesta_email_valida(dati)
 
-    nuovo_alunno = {
-        "alunni": {
-        matricola: {
-           "nome": nome,
-           "cognome": cognome,
-           "email": email,
-           "matricola": matricola,
-           "data creazione": timestamp,
-           "data modifica": timestamp
-        }
-    },
-        "compiti": {}
-}
+    dati["alunni"][matricola] = {
+        "nome": nome,
+        "cognome": cognome,
+        "email": email,
+        "matricola": matricola,
+        "data creazione": timestamp,
+        "data modifica": timestamp
+    }
 
-    dati["alunni"].update(nuovo_alunno["alunni"])
-    dati["compiti"].update(nuovo_alunno["compiti"])
     salva_alunni(dati)
     print(f"\n✅ Alunno registrato con successo!")
 
@@ -158,7 +152,7 @@ def modifica_dati_alunno():
     
     alunni = dati["alunni"]
 
-    matricola = input("\nSeleziona l'alunno di qui vuoi modificare i dati digitando la sua matricola (es.MAT001): ")
+    matricola = input("\nSeleziona l'alunno di qui vuoi modificare i dati digitando la sua matricola (es.MAT001): ").upper()
 
     if matricola in alunni:    
         alunno = alunni[matricola]
@@ -169,28 +163,27 @@ def modifica_dati_alunno():
 
         campo = input(f"\nQuale dato dell'alunno {alunno['nome']} {alunno['cognome']} vuoi modificare? (1-3): ")
 
-        nuovo_dato = None
+        modificato = True
 
         if campo == '1':
-            nuovo_dato = input("\nInserisci il nuovo nome: ")
-            alunno['nome'] = nuovo_dato
+            alunno['nome'] = input("\nInserisci il nuovo nome: ")
             print(f"\n✅ Nome cambiato con {alunno['nome']}!")
         elif campo == '2':
-            nuovo_dato = input("\nInserisci il nuovo cognome: ")
-            alunno['cognome'] = nuovo_dato
-            print(f"\n✅ Cognome cambiato con {alunno['cognome']}")
+            alunno['cognome'] = input("\nInserisci il nuovo cognome: ")
+            print(f"\n✅ Cognome cambiato con {alunno['cognome']}!")
         elif campo == '3':
-            nuovo_dato = input("\nInserisci la nuova E-mail: ")
-            alunno['email'] = nuovo_dato
-            print(f"\n✅ E-mail cambiata con {alunno['email']}")
+            nuova_email = richiesta_email_valida(dati, matricola)
+            alunno['email'] = nuova_email
+            print(f"\n✅ E-mail cambiata con {nuova_email}!")
         else:
-            print("\nErrore: Dato non presente nel registro.")
+            print("\n❌ Errore: Dato non presente nel registro.")
+            modificato = False
+        if modificato:
+            alunno['data modifica'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            salva_alunni(dati)
+            print("\n✅ Dati aggiornati!")
     else:
-        print("\nErrore: Matricola non presente nel database.")
-
-    alunno['data modifica'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    alunni[matricola].update(alunno)
-    salva_alunni(dati)
+        print("\n❌ Errore: Matricola non presente nel database.")
 
 def elimina_alunno():
     """Elimina i dati relativi all'alunno selezionato"""
@@ -248,11 +241,13 @@ def assegna_compito():
 
     if not dati or not dati.get("alunni"):
         print("\n❌ Nessun alunno presente nel database")
+        return
 
     matricola = input("Seleziona l'alunno a cui assegnare il compito digitando la sua matricola (es.MAT001):").strip().upper()
 
     if matricola not in dati["alunni"]:
         print("\n❌ Errore: Matricola non presente nel database.")
+        return
 
     alunno = dati["alunni"][matricola]
     print(f"✅ Alunno selezionato: {alunno['nome']} {alunno['cognome']}")
@@ -364,7 +359,7 @@ def assegna_voto():
                 print("\n❌ Errore: Il voto non può essere vuoto.")
                 continue
 
-            voto = int(voto_input)
+            voto = float(voto_input.replace(',', '.'))
 
             if voto < 0 or voto > 10:
                 print("\n❌ Voto non valido. Deve essere tra 0 e 10.")
@@ -373,6 +368,7 @@ def assegna_voto():
             compito["voto"] = voto
             compito["stato"] = "registrato"
             compito["data valutazione"] =  datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            salva_alunni(dati)
             print(f"\n✅ Voto {voto} assegnato con successo al compito {task}!")
             break
         except ValueError:
@@ -810,12 +806,11 @@ def importazione_dati_csv():
                     if voto_str:
                         try:
                             voto_float = float(voto_str.replace(',', '.'))
-                            voto_int = int(voto_float)
-                            if voto_int < 0 or voto_int > 10:
+                            if voto_float < 0 or voto_float > 10:
                                 print(f"⚠️  Riga {num_riga}: Voto non valido ({voto_str}), compito importato senza voto")
                                 voto = None
                             else:
-                                voto = voto_int
+                                voto = voto_float
                                 stato = "registrato"
                                 data_valutazione = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         except ValueError:
@@ -904,8 +899,6 @@ def menu():
 
     while True:
 
-     carica_database()
-     
      print("\n")
      box_testo("SISTEMA TRACCIAMENTO ALUNNI")
      print("     A)Inserisci nuovo alunno")
@@ -1018,7 +1011,7 @@ def menu():
              continue
     
      else:
-         print("❌ Operazione non valida. Riprova.")
+         print("\n❌ Opzione non presente nel menù. Riprova.")
 
      input("\n[Premi INVIO per continuare...]")
 
