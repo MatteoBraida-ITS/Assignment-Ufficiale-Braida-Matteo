@@ -29,13 +29,40 @@ def crea_task():
      contatore_task += 1
      return f"TASK{contatore_task:03d}"
 
+def sincronizza_contatori(dati):
+    """Aggiorna i contatori globali basandosi sui dati caricati"""
+    global contatore_matricola, contatore_task
+    
+    alunni = dati.get("alunni", {})
+    compiti = dati.get("compiti", {})
+
+    matricole = [int(k[3:]) for k in alunni.keys() if k.startswith("MAT") and k[3:].isdigit()]
+    if matricole:
+        contatore_matricola = max(matricole)
+    else:
+        contatore_matricola = 0
+
+    tasks = [int(k[4:]) for k in compiti.keys() if k.startswith("TASK") and k[4:].isdigit()]
+    if tasks:
+        contatore_task = max(tasks)
+    else:
+        contatore_task = 0
+
 def carica_database():
     """Carica la lista degli alunni del file JSON, se esiste"""
-    if os.path.exists("lista_alunni.json"):
+    if not os.path.exists("lista_alunni.json"):
+        return{"alunni": {}, "compiti": {}}
+    
+    try:
         with open("lista_alunni.json", "r", encoding="utf-8") as file:
-            return json.load(file)
-    else:
-        return {}
+            dati = json.load(file)
+            if "alunni" not in dati: dati["alunni"] = {}
+            if "compiti" not in dati: dati["compiti"] = {}
+            return dati
+    except (json.JSONDecodeError, IOError):
+        print("\n Errore nel caricamento del database. File corrotto o illegibile.")
+        return {"alunni": {}, "compiti": {}}
+    
     
 def crea_alunni(lista):
      """Crea la  la lista_alunni.json"""
@@ -55,9 +82,9 @@ def visualizza_alunni():
     if alunni:
         for matricola, alunno in alunni.items():
             if matricola.startswith("MAT"):
-                print(f"{matricola}:\n -Nome:{alunno['nome']}\n -Cognome:{alunno['cognome']}\n -E-mail:{alunno['email']}")
+                print(f"\n{matricola}:\n -Nome:{alunno['nome']}\n -Cognome:{alunno['cognome']}\n -E-mail:{alunno['email']}")
     else:
-        print("Nessun alunno presente.")
+        print("\nNessun alunno presente.")
 
 def valida_email(email: str) -> bool:
     """Valida un indirizzo email"""
@@ -86,19 +113,19 @@ def richiesta_email_valida(dati: dict, matricola_da_escludere: str = None) -> st
     """Richiede una email all'utente fino a che questa non è considerata valida"""
 
     while True:
-        email = input("inserisci la e-mail: ").strip()
+        email = input("\ninserisci la e-mail: ").strip()
 
         if not email:
-            print("❌ Errore: L'email non può essere vuota.")
+            print("\n❌ Errore: L'email non può essere vuota.")
             continue
         
         if not valida_email(email):
-            print("❌ Errore: L'email inserita non è valida.")
+            print("\n❌ Errore: L'email inserita non è valida.")
             print("   Formato corretto: esempio@dominio.com")
             continue
         
         if email_esistente(email, dati, matricola_da_escludere):
-            print("❌ Errore: Questa email è già utilizzata da un altro alunno.")
+            print("\n❌ Errore: Questa email è già utilizzata da un altro alunno.")
             continue
         
         return email
@@ -116,13 +143,13 @@ def aggiungi_alunno():
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
 
     while True:
-        nome = input("\nInserisci il nome del nuovo alunno:")
+        nome = input("\nInserisci il nome del nuovo alunno:").strip()
         if nome:
             break
         print("\n❌ Non puoi lasciare il campo vuoto.")
     
     while True:
-        cognome = input("\nInserisci il cognome del nuovo alunno:")
+        cognome = input("\nInserisci il cognome del nuovo alunno:").strip()
         if cognome:
             break
         print("\n❌ Non puoi lasciare il campo vuoto.")
@@ -146,13 +173,13 @@ def modifica_dati_alunno():
     """Modica i dati degli studenti contenuti nel file JSON"""
     dati = carica_database()
     
-    if not dati:
+    if not dati or "alunni" not in dati or not dati["alunni"]:
         print("\nNessun alunno presente nel database")
         return
     
     alunni = dati["alunni"]
 
-    matricola = input("\nSeleziona l'alunno di qui vuoi modificare i dati digitando la sua matricola (es.MAT001): ").upper()
+    matricola = input("\nSeleziona l'alunno di qui vuoi modificare i dati digitando la sua matricola (es.MAT001): ").strip().upper()
 
     if matricola in alunni:    
         alunno = alunni[matricola]
@@ -161,16 +188,24 @@ def modifica_dati_alunno():
         print(f"\n2) Cognome: {alunno['cognome']}")
         print(f"\n3) E-mail: {alunno['email']}")
 
-        campo = input(f"\nQuale dato dell'alunno {alunno['nome']} {alunno['cognome']} vuoi modificare? (1-3): ")
+        campo = input(f"\nQuale dato dell'alunno {alunno['nome']} {alunno['cognome']} vuoi modificare? (1-3): ").strip()
 
         modificato = True
 
         if campo == '1':
-            alunno['nome'] = input("\nInserisci il nuovo nome: ")
-            print(f"\n✅ Nome cambiato con {alunno['nome']}!")
+            alunno['nome'] = input("\nInserisci il nuovo nome: ").strip()
+            if not alunno['nome']:
+                print("\n❌ Il nome non può essere vuoto.")
+                modificato = False
+            else:
+                print(f"\n✅ Nome cambiato con {alunno['nome']}!")
         elif campo == '2':
-            alunno['cognome'] = input("\nInserisci il nuovo cognome: ")
-            print(f"\n✅ Cognome cambiato con {alunno['cognome']}!")
+            alunno['cognome'] = input("\nInserisci il nuovo cognome: ").strip()
+            if not alunno['cognome']:
+                print("\n❌ Il cognome non può essere vuoto.")
+                modificato = False
+            else:
+                print(f"\n✅ Cognome cambiato con {alunno['cognome']}!")
         elif campo == '3':
             nuova_email = richiesta_email_valida(dati, matricola)
             alunno['email'] = nuova_email
@@ -209,7 +244,7 @@ def elimina_alunno():
     if compiti_associati > 0:
         print(f"\n⚠️  ATTENZIONE: Questo alunno ha {compiti_associati} compiti associati che verranno eliminati!")
 
-    conferma = input(f"\n⚠️ Sei sicuro di voler eliminare i dati di {alunno['nome']} {alunno['cognome']}? (y/n): ").lower()
+    conferma = input(f"\n⚠️ Sei sicuro di voler eliminare i dati di {alunno['nome']} {alunno['cognome']}? (y/n): ").strip().lower()
 
     if conferma == 'y':
         alunni.pop(matricola)
@@ -225,15 +260,14 @@ def elimina_alunno():
 
         print(f"\n✅ L'alunno {alunno['nome']} {alunno['cognome']} con matricola {matricola} è stato rimosso dal database.")
         if task_da_eliminare:
-            print(f"✅ {len(task_da_eliminare)} compiti associati sono stati eliminati.")
+            print(f"\n✅ {len(task_da_eliminare)} compiti associati sono stati eliminati.")
+            salva_alunni(dati)
     elif conferma == 'n':
         print("\n⚠️ Operazione annullata.")
         return
     else:
         print("\n❌ Comando non valido.")
         return
-
-    salva_alunni(dati)
 
 def assegna_compito():
     """Assegna un compito ad un alunno"""
@@ -243,20 +277,20 @@ def assegna_compito():
         print("\n❌ Nessun alunno presente nel database")
         return
 
-    matricola = input("Seleziona l'alunno a cui assegnare il compito digitando la sua matricola (es.MAT001):").strip().upper()
+    matricola = input("\nSeleziona l'alunno a cui assegnare il compito digitando la sua matricola (es.MAT001):").strip().upper()
 
     if matricola not in dati["alunni"]:
         print("\n❌ Errore: Matricola non presente nel database.")
         return
 
     alunno = dati["alunni"][matricola]
-    print(f"✅ Alunno selezionato: {alunno['nome']} {alunno['cognome']}")
+    print(f"\n✅ Alunno selezionato: {alunno['nome']} {alunno['cognome']}")
 
     while True:
         compito_da_assegnare = input(f"Quale compito vuoi assegnare?: ").strip()
         if compito_da_assegnare:
             break
-        print("❌ Errore: La descrizione del compito non può essere vuota.")
+        print("\n❌ Errore: La descrizione del compito non può essere vuota.")
 
     task = crea_task()
 
@@ -343,7 +377,7 @@ def assegna_voto():
     compito = compiti[task]
 
     if compito["voto"] is not None:
-        conferma = input(f"\n⚠️  Questo compito ha già un voto ({compito['voto']}). Vuoi sovrascriverlo? (y/n): ").lower()
+        conferma = input(f"\n⚠️  Questo compito ha già un voto ({compito['voto']}). Vuoi sovrascriverlo? (y/n): ").strip().lower()
         if conferma == 'y':
             pass
         elif conferma == 'n':
@@ -375,7 +409,6 @@ def assegna_voto():
             print("\n❌ Errore: Inserisci un numero valido.")
             continue
 
-    compiti[task].update(compito)
     salva_alunni(dati)
 
 def visualizza_statistiche():
@@ -458,8 +491,9 @@ def ranking_alunni():
         voti_per_alunno[alunno].append(voto)
 
     for alunno, voti in voti_per_alunno.items():
-        if voti:
-            media = sum(voti) / len(voti)
+        voti_validi = [v for v in voti if v is not None]
+        if voti_validi:
+            media = sum(voti_validi) / len(voti_validi)
             medie[alunno] = media
 
     if not medie:
@@ -605,7 +639,7 @@ def carica_dati_backup():
         percorso_file = os.path.join(cartella, file_selezionato)
 
         print(f"\n⚠️  ATTENZIONE: Questa operazione sovrascriverà i dati attuali!")
-        conferma = input("\nSei sicuro di voler continuare? (y/n): ").lower()
+        conferma = input("\nSei sicuro di voler continuare? (y/n): ").strip().lower()
 
         if conferma == 'y':
             pass
@@ -699,14 +733,14 @@ def esportazione_dati_csv():
         print(f"❌ Errore durante l'esportazione: {e}")
 
 def importazione_dati_csv():
-    """Importa alunni e compiti da file CSV."""
+    """Importa alunni e compiti da file CSV con validazione e prevenzione duplicati."""
     if not os.path.exists(cartella_csv):
-        print("\n Nessun backup presente.")
+        print("\n❌ Cartella backup CSV non trovata.")
         return 
     
     backup_files = [f for f in os.listdir(cartella_csv) if f.endswith(".csv")]
     if not backup_files:
-        print("\n❌ Nessun backup presente.")
+        print("\n❌ Nessun file CSV presente nella cartella di backup.")
         return
 
     print("\n📁 Backup disponibili:")
@@ -714,27 +748,15 @@ def importazione_dati_csv():
         print(f"{i}. {file}")
 
     try:
-
-        while True:
-            scelta_input = input("\nQuale backup vuoi caricare? (numero): ").strip()
-            if not scelta_input.isdigit():
-                print("\n❌ Scelta non valida: devi inserire un numero.")
-                continue
-            
-            scelta_indice = int(scelta_input) - 1
-            
-            if scelta_indice < 0 or scelta_indice >= len(backup_files):
-                print("\n❌ Scelta non valida.")
-                return
-            
-            scelta = scelta_indice
-            break
-
-        file_selezionato = backup_files[scelta]
+        scelta_input = input("\nQuale backup vuoi caricare? (numero): ").strip()
+        if not scelta_input.isdigit() or int(scelta_input) < 1 or int(scelta_input) > len(backup_files):
+            print("\n❌ Scelta non valida.")
+            return
+        
+        file_selezionato = backup_files[int(scelta_input) - 1]
         percorso_file = os.path.join(cartella_csv, file_selezionato)
 
         dati = carica_database()
-
         if not dati:
             dati = {"alunni": {}, "compiti": {}}
 
@@ -742,24 +764,34 @@ def importazione_dati_csv():
         compiti_importati = 0
         righe_saltate = 0
         
-        # Dizionario temporaneo per tracciare gli alunni elaborati
+        # Cache locale per gestire duplicati all'interno dello stesso CSV
         alunni_elaborati = {}  
         
         with open(percorso_file, 'r', encoding='utf-8-sig') as csvfile:
             reader = csv.DictReader(csvfile)
             
-            print(f"\n📥 Importazione da {percorso_file}...")
+            # --- VALIDAZIONE COLONNE ---
+            # Verifichiamo che le colonne minime necessarie esistano
+            colonne_presenti = set(reader.fieldnames) if reader.fieldnames else set()
+            colonne_minime = {'Nome', 'Cognome', 'Email', 'Descrizione_Compito'}
+            
+            if not colonne_minime.issubset(colonne_presenti):
+                print(f"\n❌ Errore: Il file CSV non ha le colonne corrette.")
+                print(f"Mancano: {colonne_minime - colonne_presenti}")
+                return
+
+            print(f"\n📥 Inizio importazione da {file_selezionato}...")
             print("="*70)
             
-            for num_riga, row in enumerate(reader, start=2):  # Parte da 2 perché la riga 1 è l'header
+            for num_riga, row in enumerate(reader, start=2):
                 nome = row.get('Nome', '').strip()
                 cognome = row.get('Cognome', '').strip()
                 email = row.get('Email', '').strip()
                 descrizione_compito = row.get('Descrizione_Compito', '').strip()
                 voto_str = row.get('Voto', '').strip()
                 
+                # Validazione dati minimi riga
                 if not nome or not cognome or not email:
-                    print(f"⚠️  Riga {num_riga} saltata: Nome, Cognome o Email mancanti")
                     righe_saltate += 1
                     continue
                 
@@ -767,21 +799,25 @@ def importazione_dati_csv():
                     print(f"⚠️  Riga {num_riga} saltata: email non valida ({email})")
                     righe_saltate += 1
                     continue
-                
-                
+
+                # --- GESTIONE ALUNNO (Case-Insensitive) ---
+                email_lower = email.lower()
                 matricola = None
                 
-                if email.lower() in alunni_elaborati:
-                    matricola = alunni_elaborati[email.lower()]
+                # 1. Cerca nella cache del ciclo corrente
+                if email_lower in alunni_elaborati:
+                    matricola = alunni_elaborati[email_lower]
                 
-                elif email_esistente(email, dati):
+                # 2. Cerca nel database esistente
+                else:
                     for mat, alunno in dati["alunni"].items():
-                        if alunno["email"].lower() == email.lower():
+                        if alunno["email"].lower() == email_lower:
                             matricola = mat
-                            alunni_elaborati[email.lower()] = matricola
+                            alunni_elaborati[email_lower] = matricola
                             break
                 
-                else:
+                # 3. Se non trovato, crea nuovo alunno
+                if not matricola:
                     matricola = crea_matricola()
                     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     
@@ -794,105 +830,66 @@ def importazione_dati_csv():
                         "data modifica": timestamp
                     }
                     
-                    alunni_elaborati[email.lower()] = matricola
+                    alunni_elaborati[email_lower] = matricola
                     alunni_importati += 1
-                    print(f"✅ Alunno creato: {nome} {cognome} ({matricola})")
+                    print(f"✅ Nuovo alunno: {nome} {cognome} ({matricola})")
                 
+                # --- GESTIONE COMPITO (Evita Duplicati) ---
                 if descrizione_compito:
+                    # Controllo se l'alunno ha già un compito identico
+                    gia_presente = any(
+                        t["matricola"] == matricola and 
+                        t["descrizione"].lower() == descrizione_compito.lower()
+                        for t in dati["compiti"].values()
+                    )
+                    
+                    if gia_presente:
+                        continue
+
+                    # Elaborazione voto e stato
                     voto = None
                     stato = "assegnato"
-                    data_valutazione = None
+                    data_val = None
                     
                     if voto_str:
                         try:
-                            voto_float = float(voto_str.replace(',', '.'))
-                            if voto_float < 0 or voto_float > 10:
-                                print(f"⚠️  Riga {num_riga}: Voto non valido ({voto_str}), compito importato senza voto")
-                                voto = None
-                            else:
-                                voto = voto_float
+                            v_float = float(voto_str.replace(',', '.'))
+                            if 0 <= v_float <= 10:
+                                voto = v_float
                                 stato = "registrato"
-                                data_valutazione = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                                data_val = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         except ValueError:
-                            print(f"⚠️  Riga {num_riga}: Voto non valido ({voto_str}), compito importato senza voto")
-                            voto = None
+                            pass
                     
                     task_id = crea_task()
-                    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    
                     dati["compiti"][task_id] = {
                         "id": task_id,
                         "descrizione": descrizione_compito,
                         "matricola": matricola,
                         "stato": stato,
-                        "data assegnazione": timestamp,
+                        "data assegnazione": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                         "voto": voto
                     }
+                    if data_val:
+                        dati["compiti"][task_id]["data valutazione"] = data_val
                     
-                    if data_valutazione:
-                        dati["compiti"][task_id]["data valutazione"] = data_valutazione
-                    
-                    voto_display = f"voto {voto}" if voto is not None else "senza voto"
-                    print(f"   📝 Compito aggiunto: '{descrizione_compito}' ({voto_display})")
                     compiti_importati += 1
         
+        # Salvataggio finale e sincronizzazione
         if alunni_importati > 0 or compiti_importati > 0:
             salva_alunni(dati)
+            sincronizza_contatori(dati)
             print(f"\n{'='*70}")
             print(f"✅ IMPORTAZIONE COMPLETATA!")
-            print(f"{'='*70}")
-            print(f"👥 Alunni importati: {alunni_importati}")
-            print(f"📚 Compiti importati: {compiti_importati}")
-            print(f"⚠️  Righe saltate: {righe_saltate}")
+            print(f"👥 Nuovi alunni: {alunni_importati}")
+            print(f"📚 Nuovi compiti: {compiti_importati}")
+            print(f"⚠️  Righe saltate/invalide: {righe_saltate}")
             print(f"{'='*70}")
         else:
-            print(f"\n⚠️  Nessun dato importato.")
+            print("\nℹ️ Nessun nuovo dato importato (dati già presenti nel database).")
             
-    except FileNotFoundError:
-        print(f"❌ Errore: File non trovato.")
-    except KeyError as e:
-        print(f"❌ Errore: Colonna mancante nel CSV: {e}")
-        print("   Formato richiesto: Nome, Cognome, Email, Descrizione_Compito, Voto")
-    except KeyboardInterrupt:
-        print("\n\n⚠️  Operazione annullata dall'utente.")
     except Exception as e:
         print(f"❌ Errore durante l'importazione: {e}")
-
-#Inizializzazione database
-if not os.path.exists("lista_alunni.json"):
-    matricola_iniziale = crea_matricola()
-    timestamp_iniziale = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    database = {
-     "alunni": {
-         matricola_iniziale: {
-             "nome": "Matteo",
-             "cognome": "Braida",
-             "email": "braida.matteo@its.com",
-             "matricola": matricola_iniziale,
-             "data creazione": timestamp_iniziale,
-             "data modifica": timestamp_iniziale
-         },
-     },
-     "compiti":{}
-    }
-  
-    crea_alunni(database)
-    print(f"✅ File 'lista_alunni.json' creato con alunno iniziale {matricola_iniziale}")
-else:
-    alunni_esistenti = carica_database()
-    alunni = alunni_esistenti.get("alunni", {})
-    compiti = alunni_esistenti.get("compiti", {})
-
-
-    matricole = [int(key.replace("MAT","")) for key in alunni.keys() if key.startswith("MAT")]
-    if matricole:
-        contatore_matricola = max(matricole)
-
-    tasks = [int(key.replace("TASK","")) for key in compiti.keys() if key.startswith("TASK")]
-    if tasks:
-        contatore_task = max(tasks)
-
 
 def menu():
     """Menù principale con loop"""
@@ -919,7 +916,7 @@ def menu():
      print("     R)Importa dati da file CSV")
      print("     Z)Esci")
      
-     scelta_menu = input("\n➤ Seleziona l'opzione: ").lower()
+     scelta_menu = input("\n➤ Seleziona l'opzione: ").strip().lower()
  
      if scelta_menu == 'a':
          print("\n")
@@ -1001,7 +998,7 @@ def menu():
      
      elif scelta_menu == 'z':
          print("\n")
-         conferma = input ("Sei sicuro di voler uscire? (y/n):").lower()
+         conferma = input ("Sei sicuro di voler uscire? (y/n):").strip().lower()
          if conferma == 'y':
              print("\n 👋 Grazie per aver utilizzato il sistema di tracciamento alunni!")
              print("      Arrivederci!\n")
@@ -1016,4 +1013,13 @@ def menu():
      input("\n[Premi INVIO per continuare...]")
 
 if __name__ == "__main__":
+
+    dati = carica_database()
+
+    sincronizza_contatori(dati)
+    
+    if not dati["alunni"]:
+        dati = {"alunni": {}, "compiti": {}}
+        salva_alunni(dati)
+    
     menu()

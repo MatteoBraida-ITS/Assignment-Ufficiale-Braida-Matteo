@@ -6,15 +6,15 @@
             "email": "rossi.matteo@its.com",
             "matricola": "MAT001",
             "data creazione": "2025-12-14 22:20:45",
-            "data modifica": "2025-12-22 12:29:37"
+            "data modifica": "2025-12-22 21:29:13"
         },
         "MAT002": {
             "nome": "Giovanni",
-            "cognome": "Furlani",
+            "cognome": "Furla",
             "email": "furla.giovanni@its.com",
             "matricola": "MAT002",
             "data creazione": "2025-12-14 22:21:41",
-            "data modifica": "2025-12-14 22:21:41"
+            "data modifica": "2025-12-23 00:51:20"
         },
         "MAT003": {
             "nome": "Giuseppe",
@@ -101,6 +101,23 @@
             "matricola": "MAT003",
             "stato": "assegnato",
             "data assegnazione": "2025-12-14 22:21:41",
+            "voto": null
+        },
+        "TASK007": {
+            "id": "TASK007",
+            "descrizione": "es java",
+            "matricola": "MAT005",
+            "stato": "registrato",
+            "data assegnazione": "2025-12-22 21:32:45",
+            "voto": 7.5,
+            "data valutazione": "2025-12-22 21:34:18"
+        },
+        "TASK008": {
+            "id": "TASK008",
+            "descrizione": "es python",
+            "matricola": "MAT006",
+            "stato": "assegnato",
+            "data assegnazione": "2025-12-22 22:30:57",
             "voto": null
         }
     }
